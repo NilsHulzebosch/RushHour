@@ -7,5 +7,7 @@ public class Main {
         for (int i = 0; i < text.length(); i++) {
             System.out.println("Hello world");
         }
+
+        int[] testArray = new int[10];
     }
 }
