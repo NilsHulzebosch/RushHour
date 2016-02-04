@@ -8,6 +8,9 @@ public class Main {
             System.out.println("Hello world");
         }
 
-        int[] testArray = new int[10];
+        // tileBoard with cars on it
+        int[][] tileBoard = new int[10][10];
+
+        
     }
 }
