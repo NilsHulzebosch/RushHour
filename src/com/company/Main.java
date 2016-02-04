@@ -6,6 +6,7 @@ public class Main {
         String text = "Hello world";
         for (int i = 0; i < text.length(); i++) {
             System.out.println("Hello world");
+            System.out.println("ey print dit gewoon");
         }
 
         int[] testArray = new int[10];
