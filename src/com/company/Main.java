@@ -9,8 +9,6 @@ public class Main {
             text_2 = text_2 + text.charAt(i);
             System.out.println(text_2);
         }
-        System.out.println("ey print dit gewoon");
-
 
         // car lengths
         int smallCar = 2;
