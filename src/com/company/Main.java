@@ -28,30 +28,23 @@ public class Main {
         tileBoard[0][3] = vertical2length;
         tileBoard[0][4] = vertical2length;
 
+        // print the cars and their (top/left) coordinates
         for(int i = 0; i < 6; i++) {
             for(int j = 0; j < 6; j++) {
-                System.out.println(tileBoard[i][j]);
+                if(tileBoard[i][j] != null) {
+                    System.out.println(i + j + tileBoard[i][j]);
+                }
             }
         }
 
+        /*
         String text = "Hello world";
         String text_2 = "";
         for (int i = 0; i < text.length(); i++) {
             text_2 = text_2 + text.charAt(i);
             System.out.println(text_2);
         }
-
-        // car lengths
-        int smallCar = 2;
-        int bigCar = 3;
-
-
-        //System.out.println("");
-
-
-        // show available spots on tileboard
-        boolean[][] isAvailable = new boolean[6][6];
-
+        */
 
 
     }
