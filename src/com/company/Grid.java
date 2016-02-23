@@ -39,8 +39,16 @@ public class Grid {
     }
 
     public void moveLeft(Vehicle vehicle, int x, int y) {
-        grid[x + vehicle.getLength() - 1][y] = 0;
-        grid[x - 1][y] = grid[x][y];
+        // check whether x-1 passes the grid size (to avoid ArrayIndexOutOfBoundsException)
+        // also make sure it's the first car_number of the car and not the middle/last one
+        if(x > 0 && grid[x-1][y] != grid[x][y]) {
+
+            // check whether that index is a 'free' spot (i.e. = 0)
+            if(grid[x-1][y] == 0) {
+                grid[x + vehicle.getLength() - 1][y] = 0;
+                grid[x - 1][y] = grid[x][y];
+            }
+        }
     }
 
     public void moveDown(Vehicle vehicle, int x, int y) {
@@ -57,8 +65,16 @@ public class Grid {
     }
 
     public void moveUp(Vehicle vehicle, int x, int y) {
-        grid[x][y + vehicle.getLength() - 1] = 0;
-        grid[x][y - 1] = grid[x][y];
+        // check whether y-1 passes the grid size (to avoid ArrayIndexOutOfBoundsException)
+        // also make sure it's the first car_number of the car and not the middle/last one
+        if(y > 0 && grid[x][y-1] != grid[x][y]) {
+
+            // check whether that index is a 'free' spot (i.e. = 0)
+            if(grid[x][y-1] == 0) {
+                grid[x][y + vehicle.getLength() - 1] = 0;
+                grid[x][y - 1] = grid[x][y];
+            }
+        }
     }
 
     public void printGrid() {
@@ -67,6 +83,22 @@ public class Grid {
                 System.out.print(grid[j][i] + " ");
             }
             System.out.println();
+        }
+    }
+
+    public void delay(int milliseconds) {
+        // delay an amount of milliseconds
+        try {
+            Thread.sleep(milliseconds);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void whipeScreen() {
+        for(int i = 0; i < 15; i++) {
+            System.out.print("\n");
+
         }
     }
 }
