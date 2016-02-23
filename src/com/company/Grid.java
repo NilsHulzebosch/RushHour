@@ -13,6 +13,8 @@ public class Grid {
     private Vehicle[] vehicles;
 
     private int car_number = 1;
+    private boolean isFinished;
+
 
     // constructor
     public Grid(int size, int amount_of_cars) {
@@ -119,6 +121,26 @@ public class Grid {
                 System.out.print(grid[j][i] + " ");
             }
             System.out.println();
+        }
+    }
+
+    public boolean isFinished(int ExitX, int ExitY, int redCarNumber) {
+        return grid[ExitX][ExitY] != redCarNumber;
+    }
+
+    public void delay(int milliseconds) {
+        // delay an amount of milliseconds
+        try {
+            Thread.sleep(milliseconds);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void whipeScreen() {
+        for(int i = 0; i < 15; i++) {
+            System.out.print("\n");
+
         }
     }
 }
