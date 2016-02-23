@@ -26,8 +26,16 @@ public class Grid {
     }
 
     public void moveRight(Vehicle vehicle, int x, int y) {
-        grid[x + vehicle.getLength()][y] = grid[x][y];
-        grid[x][y] = 0;
+        // check whether x+vehicle.getLength() passes the grid size (to avoid ArrayIndexOutOfBoundsException)
+        // also make sure it's the first car_number of the car and not the middle/last one
+        if(x+vehicle.getLength() < 6 && (x == 0 || grid[x-1][y] != grid[x][y])) {
+
+            // check whether that index is a 'free' spot (i.e. = 0)
+            if(grid[x + vehicle.getLength()][y] == 0) {
+                grid[x + vehicle.getLength()][y] = grid[x][y];
+                grid[x][y] = 0;
+            }
+        }
     }
 
     public void moveLeft(Vehicle vehicle, int x, int y) {
@@ -36,8 +44,16 @@ public class Grid {
     }
 
     public void moveDown(Vehicle vehicle, int x, int y) {
-        grid[x][y + vehicle.getLength()] = grid[x][y];
-        grid[x][y] = 0;
+        // check whether y+vehicle.getLength() passes the grid size (to avoid ArrayIndexOutOfBoundsException)
+        // also make sure it's the first car_number of the car and not the middle/last one
+        if(y+vehicle.getLength() < 6 && (y == 0 || grid[x][y-1] != grid[x][y])) {
+
+            // check whether that index is a 'free' spot (i.e. = 0)
+            if(grid[x][y + vehicle.getLength()] == 0) {
+                grid[x][y + vehicle.getLength()] = grid[x][y];
+                grid[x][y] = 0;
+            }
+        }
     }
 
     public void moveUp(Vehicle vehicle, int x, int y) {
