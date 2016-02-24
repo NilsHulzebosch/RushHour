@@ -1,8 +1,5 @@
 package com.company;
 
-/**
- * Created by Sjors on 23-2-2016.
- */
 public class Vehicle {
 
     // true = horizontal
