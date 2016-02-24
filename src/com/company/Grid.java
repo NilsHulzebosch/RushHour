@@ -50,9 +50,9 @@ public class Grid {
             if(grid[x + length][y] == 0) {
                 grid[x + length][y] = grid[x][y];
                 grid[x][y] = 0;
+                vehicles[car_nr].addX(x + 1);
             }
         }
-        vehicles[car_nr].addX(x + 1);
     }
 
     // moves vehicle 1 position left
@@ -66,12 +66,12 @@ public class Grid {
         if(x > 0 && grid[x-1][y] != grid[x][y]) {
 
             // check whether that index is a 'free' spot (i.e. = 0)
-            if(grid[x-1][y] == 0) {
+            if(grid[x - 1][y] == 0) {
                 grid[x + length - 1][y] = 0;
                 grid[x - 1][y] = grid[x][y];
+                vehicles[car_nr].addX(x - 1);
             }
         }
-        vehicles[car_nr].addX(x + 1);
     }
 
     // moves vehicle 1 position down
@@ -88,9 +88,9 @@ public class Grid {
             if(grid[x][y + length] == 0) {
                 grid[x][y + length] = grid[x][y];
                 grid[x][y] = 0;
+                vehicles[car_nr].addY(y + 1);
             }
         }
-        vehicles[car_nr].addY(y + 1);
     }
 
     // moves vehicle 1 position up
@@ -107,9 +107,13 @@ public class Grid {
             if(grid[x][y-1] == 0) {
                 grid[x][y + length - 1] = 0;
                 grid[x][y - 1] = grid[x][y];
+                vehicles[car_nr].addY(y - 1);
             }
         }
-        vehicles[car_nr].addY(y + 1);
+    }
+
+    public boolean goalReached() {
+        return vehicles[1].getX() == size - 2;
     }
 
     // prints out representation of grid

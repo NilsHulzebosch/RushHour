@@ -1,10 +1,14 @@
 package com.company;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 public class Main extends JPanel {
 
-    private static Grid grid = new Grid(6, 2);
+    private static final int GRID_SIZE = 6;
+    private static final int AMOUNT_OF_VEHICLES = 2;
+
+    private static Grid grid = new Grid(GRID_SIZE, AMOUNT_OF_VEHICLES);
 
     private static Vehicle hor_car = new Vehicle(true, 2);
     private static Vehicle hor_truck = new Vehicle(true, 3);
@@ -17,20 +21,20 @@ public class Main extends JPanel {
 
         visualize();
 
-        grid.moveDown(2);
-        grid.moveRight(1);
-
-        visualize();
-
-        grid.moveDown(2);
-        grid.moveRight(1);
-
-        visualize();
-
-        grid.moveUp(2);
-        grid.moveLeft(1);
-
-        visualize();
+        /* Dit was een uitprobeersel, maar het werkt (nog) niet
+        int random_move;
+        while (!grid.goalReached()) {
+            random_move = (int)(Math.random()*4);
+            switch (random_move)
+            {
+                case 0: grid.moveRight(1);
+                case 1: grid.moveLeft(1);
+                case 2: grid.moveUp(2);
+                case 3: grid.moveDown(2);
+            }
+            visualize();
+        }
+        */
     }
 
     private static void visualize() {
