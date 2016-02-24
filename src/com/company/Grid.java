@@ -85,20 +85,4 @@ public class Grid {
             System.out.println();
         }
     }
-
-    public void delay(int milliseconds) {
-        // delay an amount of milliseconds
-        try {
-            Thread.sleep(milliseconds);
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    public void whipeScreen() {
-        for(int i = 0; i < 15; i++) {
-            System.out.print("\n");
-
-        }
-    }
 }

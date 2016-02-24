@@ -15,24 +15,40 @@ public class Main extends JPanel {
         grid.addVehicle(hor_car, 0, 2);
         grid.addVehicle(ver_truck, 4, 0);
 
-        grid.whipeScreen();
+        wipeScreen();
         grid.printGrid();
-        grid.delay(3000);
+        delay(3000);
 
         grid.moveDown(ver_truck, 4, 0);
         grid.moveRight(hor_car, 0, 2);
 
-        grid.whipeScreen();
+        wipeScreen();
         grid.printGrid();
-        grid.delay(3000);
+        delay(3000);
 
         grid.moveUp(ver_truck, 4, 1);
         grid.moveLeft(hor_car, 1, 2);
         //grid.moveDown(ver_truck, 4, 0);
 
-        grid.whipeScreen();
+        wipeScreen();
         grid.printGrid();
-        grid.delay(3000);
+        delay(3000);
 
+    }
+
+    private static void delay(int milliseconds) {
+        // delay an amount of milliseconds
+        try {
+            Thread.sleep(milliseconds);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private static void wipeScreen() {
+        for(int i = 0; i < 15; i++) {
+            System.out.print("\n");
+
+        }
     }
 }
