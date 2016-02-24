@@ -8,6 +8,10 @@ import java.util.ArrayList;
  */
 public class Grid {
 
+    // we kunnen per assignment het bord aanmaken en dan runnen, dus dan kunnen we per assignment de
+    // NUM_OF_CARS aanpassen, right?
+    private static final int NUM_OF_CARS = 9;
+
     private int size;
     private int[][] grid;
     private Vehicle[] vehicles;
@@ -39,16 +43,18 @@ public class Grid {
     }
 
     // moves vehicle 1 position right
+    /*
+     * First check whether x+vehicle.getLength() passes the grid size (to avoid ArrayIndexOutOfBoundsException).
+     * Also make sure it's the first car_number of the car and not the middle/last one, to avoid
+     * cars being slashed into pieces (like this: 110000 -> NOT 100100 but 011000).
+     * Also check whether the next index is indeed a 'free' spot (value 0).
+     */
     public void moveRight(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        // check whether x+vehicle.getLength() passes the grid size (to avoid ArrayIndexOutOfBoundsException)
-        // also make sure it's the first car_number of the car and not the middle/last one
         if(x + length < size && (x == 0 || grid[x - 1][y] != grid[x][y])) {
-
-            // check whether that index is a 'free' spot (i.e. = 0)
             if(grid[x + length][y] == 0) {
                 grid[x + length][y] = grid[x][y];
                 grid[x][y] = 0;
@@ -58,16 +64,18 @@ public class Grid {
     }
 
     // moves vehicle 1 position left
+    /*
+     * First check whether x-1 passes the grid size (to avoid ArrayIndexOutOfBoundsException).
+     * Also make sure it's the first car_number of the car and not the middle/last one, to avoid
+     * cars being slashed into pieces (like this: 110000 -> NOT 100100 but 011000).
+     * Also check whether the next index is indeed a 'free' spot (value 0).
+     */
     public void moveLeft(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        // check whether x-1 passes the grid size (to avoid ArrayIndexOutOfBoundsException)
-        // also make sure it's the first car_number of the car and not the middle/last one
         if(x > 0 && grid[x-1][y] != grid[x][y]) {
-
-            // check whether that index is a 'free' spot (i.e. = 0)
             if(grid[x-1][y] == 0) {
                 grid[x + length - 1][y] = 0;
                 grid[x - 1][y] = grid[x][y];
@@ -77,16 +85,18 @@ public class Grid {
     }
 
     // moves vehicle 1 position down
+        /*
+     * First check whether y+vehicle.getLength() passes the grid size (to avoid ArrayIndexOutOfBoundsException).
+     * Also make sure it's the first car_number of the car and not the middle/last one, to avoid
+     * cars being slashed into pieces (like this: 110000 -> NOT 100100 but 011000).
+     * Also check whether the next index is indeed a 'free' spot (value 0).
+     */
     public void moveDown(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        // check whether y+vehicle.getLength() passes the grid size (to avoid ArrayIndexOutOfBoundsException)
-        // also make sure it's the first car_number of the car and not the middle/last one
         if(y + length < size && (y == 0 || grid[x][y-1] != grid[x][y])) {
-
-            // check whether that index is a 'free' spot (i.e. = 0)
             if(grid[x][y + length] == 0) {
                 grid[x][y + length] = grid[x][y];
                 grid[x][y] = 0;
@@ -96,16 +106,18 @@ public class Grid {
     }
 
     // moves vehicle 1 position up
+    /*
+     * First check whether y-1 passes the grid size (to avoid ArrayIndexOutOfBoundsException).
+     * Also make sure it's the first car_number of the car and not the middle/last one, to avoid
+     * cars being slashed into pieces (like this: 110000 -> NOT 100100 but 011000).
+     * Also check whether the next index is indeed a 'free' spot (value 0).
+     */
     public void moveUp(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        // check whether y-1 passes the grid size (to avoid ArrayIndexOutOfBoundsException)
-        // also make sure it's the first car_number of the car and not the middle/last one
         if(y > 0 && grid[x][y-1] != grid[x][y]) {
-
-            // check whether that index is a 'free' spot (i.e. = 0)
             if(grid[x][y-1] == 0) {
                 grid[x][y + length - 1] = 0;
                 grid[x][y - 1] = grid[x][y];
@@ -124,23 +136,8 @@ public class Grid {
         }
     }
 
+    // check whether the red car is in front of the exit
     public boolean isFinished(int ExitX, int ExitY, int redCarNumber) {
         return grid[ExitX][ExitY] != redCarNumber;
-    }
-
-    public void delay(int milliseconds) {
-        // delay an amount of milliseconds
-        try {
-            Thread.sleep(milliseconds);
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    public void whipeScreen() {
-        for(int i = 0; i < 15; i++) {
-            System.out.print("\n");
-
-        }
     }
 }
