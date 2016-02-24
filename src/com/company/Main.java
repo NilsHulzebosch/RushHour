@@ -31,8 +31,7 @@ public class Main extends JPanel {
         grid.addVehicle(ver_truck, 5, 0);   // (value 8)
         grid.addVehicle(ver_truck, 3, 3);   // (value 9)
 
-        wipeScreen();
-        grid.printGrid();
+        visualize();
 
         /*
         grid.addVehicle(hor_car, 0, 2);
@@ -54,16 +53,18 @@ public class Main extends JPanel {
         grid.moveLeft(1);
 
         visualize();
+        */
     }
 
+    // animate the moves
     private static void visualize() {
         wipeScreen();
         grid.printGrid();
         delay(1000);
     }
 
+    // delay an amount of milliseconds
     private static void delay(int milliseconds) {
-        // delay an amount of milliseconds
         try {
             Thread.sleep(milliseconds);
         } catch(InterruptedException ex) {
@@ -71,6 +72,7 @@ public class Main extends JPanel {
         }
     }
 
+    // wipe the screen
     private static void wipeScreen() {
         for(int i = 0; i < 15; i++) {
             System.out.println();

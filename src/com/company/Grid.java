@@ -3,14 +3,7 @@ package com.company;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-/**
- * Created by Sjors on 11-2-2016.
- */
 public class Grid {
-
-    // we kunnen per assignment het bord aanmaken en dan runnen, dus dan kunnen we per assignment de
-    // NUM_OF_CARS aanpassen, right?
-    private static final int NUM_OF_CARS = 9;
 
     private int size;
     private int[][] grid;
@@ -138,6 +131,6 @@ public class Grid {
 
     // check whether the red car is in front of the exit
     public boolean isFinished(int ExitX, int ExitY, int redCarNumber) {
-        return grid[ExitX][ExitY] != redCarNumber;
+        return grid[ExitX][ExitY] == redCarNumber;
     }
 }
