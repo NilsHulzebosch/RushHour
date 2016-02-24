@@ -26,8 +26,10 @@ public class Main {
         grid.addVehicle(ver_truck, 3, 3);   // (value 9)
 
         visualize();
-
-
+        grid.moveUp(6);
+        visualize();
+        grid.moveDown(7);
+        visualize();
     }
 
     // animate the moves
