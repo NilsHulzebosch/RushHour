@@ -1,9 +1,11 @@
 package com.company;
-import javax.swing.*;
 
-public class Main extends JPanel {
+public class Main {
 
-    private static Grid grid = new Grid(6, 2);
+    private static final int GRID_SIZE = 6;
+    private static final int AMOUNT_OF_VEHICLES = 9;
+
+    private static Grid grid = new Grid(GRID_SIZE, AMOUNT_OF_VEHICLES);
 
     private static Vehicle hor_car = new Vehicle(true, 2);
     private static Vehicle hor_truck = new Vehicle(true, 3);
@@ -11,14 +13,6 @@ public class Main extends JPanel {
     private static Vehicle ver_truck = new Vehicle(false, 3);
 
     public static void main(String[] args) {
-        // adds grid from Grid class
-        //Grid grid = new Grid(6);
-
-        // adds vehicle types from Vehicle class
-        //Vehicle hor_car = new Vehicle(true, 2);
-        //Vehicle hor_truck = new Vehicle(true, 3);
-        //Vehicle ver_car = new Vehicle(false, 2);
-        //Vehicle ver_truck = new Vehicle(false, 3);
 
         // adds the first 6x6 board configuration from our assignment
         grid.addVehicle(hor_car, 3, 2);     // red car (gets value 1)
@@ -33,27 +27,7 @@ public class Main extends JPanel {
 
         visualize();
 
-        /*
-        grid.addVehicle(hor_car, 0, 2);
-        grid.addVehicle(ver_truck, 4, 0);
 
-        visualize();
-
-        grid.moveDown(2);
-        grid.moveRight(1);
-
-        visualize();
-
-        grid.moveDown(2);
-        grid.moveRight(1);
-
-        visualize();
-
-        grid.moveUp(2);
-        grid.moveLeft(1);
-
-        visualize();
-        */
     }
 
     // animate the moves

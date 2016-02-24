@@ -1,8 +1,5 @@
 package com.company;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 public class Grid {
 
     private int size;
@@ -10,8 +7,6 @@ public class Grid {
     private Vehicle[] vehicles;
 
     private int car_number = 1;
-    private boolean isFinished;
-
 
     // constructor
     public Grid(int size, int amount_of_cars) {
@@ -47,8 +42,8 @@ public class Grid {
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        if(x + length < size && (x == 0 || grid[x - 1][y] != grid[x][y])) {
-            if(grid[x + length][y] == 0) {
+        if (x + length < size && (x == 0 || grid[x - 1][y] != grid[x][y])) {
+            if (grid[x + length][y] == 0) {
                 grid[x + length][y] = grid[x][y];
                 grid[x][y] = 0;
             }
@@ -68,13 +63,13 @@ public class Grid {
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        if(x > 0 && grid[x-1][y] != grid[x][y]) {
-            if(grid[x-1][y] == 0) {
+        if (x > 0 && grid[x - 1][y] != grid[x][y]) {
+            if (grid[x - 1][y] == 0) {
                 grid[x + length - 1][y] = 0;
                 grid[x - 1][y] = grid[x][y];
             }
         }
-        vehicles[car_nr].addX(x + 1);
+        vehicles[car_nr].addX(x - 1);
     }
 
     // moves vehicle 1 position down
@@ -89,8 +84,8 @@ public class Grid {
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        if(y + length < size && (y == 0 || grid[x][y-1] != grid[x][y])) {
-            if(grid[x][y + length] == 0) {
+        if (y + length < size && (y == 0 || grid[x][y - 1] != grid[x][y])) {
+            if (grid[x][y + length] == 0) {
                 grid[x][y + length] = grid[x][y];
                 grid[x][y] = 0;
             }
@@ -110,13 +105,18 @@ public class Grid {
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        if(y > 0 && grid[x][y-1] != grid[x][y]) {
-            if(grid[x][y-1] == 0) {
+        if (y > 0 && grid[x][y - 1] != grid[x][y]) {
+            if (grid[x][y - 1] == 0) {
                 grid[x][y + length - 1] = 0;
                 grid[x][y - 1] = grid[x][y];
             }
         }
-        vehicles[car_nr].addY(y + 1);
+        vehicles[car_nr].addY(y - 1);
+    }
+
+    // check whether the red car is in front of the exit
+    public boolean goalReached() {
+        return vehicles[1].getX() == size - 2;
     }
 
     // prints out representation of grid
@@ -127,10 +127,5 @@ public class Grid {
             }
             System.out.println();
         }
-    }
-
-    // check whether the red car is in front of the exit
-    public boolean isFinished(int ExitX, int ExitY, int redCarNumber) {
-        return grid[ExitX][ExitY] == redCarNumber;
     }
 }
