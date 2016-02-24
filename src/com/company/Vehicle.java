@@ -10,9 +10,11 @@ public class Vehicle {
     private int y;
 
     // constructor
-    public Vehicle(boolean direction, int length) {
-        this.length = length;
+    public Vehicle(boolean direction, int length, int x, int y) {
         this.direction = direction;
+        this.length = length;
+        this.x = x;
+        this.y = y;
     }
 
     // returns direction (horizontal or vertical)

@@ -16,17 +16,15 @@ public class Grid {
     }
 
     // adds vehicle to grid and array of all vehicles
-    public void addVehicle(Vehicle vehicle, int x, int y) {
-        for (int i = 0; i < vehicle.getLength(); i++) {
-            if (vehicle.getDirection()) {
+    public void addVehicle(boolean direction, int length, int x, int y) {
+        for (int i = 0; i < length; i++) {
+            if (direction) {
                 grid[x + i][y] = car_number;
             } else {
                 grid[x][y + i] = car_number;
             }
         }
-        vehicle.addY(y);
-        vehicle.addX(x);
-        vehicles[car_number] = vehicle;
+        vehicles[car_number] = new Vehicle(direction, length, x, y);
         car_number++;
     }
 
@@ -42,7 +40,7 @@ public class Grid {
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        if (x + length < size && (x == 0 || grid[x - 1][y] != grid[x][y])) {
+        if (x + length < size) {
             if (grid[x + length][y] == 0) {
                 grid[x + length][y] = grid[x][y];
                 grid[x][y] = 0;
@@ -63,7 +61,7 @@ public class Grid {
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        if (x > 0 && grid[x - 1][y] != grid[x][y]) {
+        if (x > 0) {
             if (grid[x - 1][y] == 0) {
                 grid[x + length - 1][y] = 0;
                 grid[x - 1][y] = grid[x][y];
@@ -84,7 +82,7 @@ public class Grid {
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        if (y + length < size && (y == 0 || grid[x][y - 1] != grid[x][y])) {
+        if (y + length < size) {
             if (grid[x][y + length] == 0) {
                 grid[x][y + length] = grid[x][y];
                 grid[x][y] = 0;
@@ -105,7 +103,7 @@ public class Grid {
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
-        if (y > 0 && grid[x][y - 1] != grid[x][y]) {
+        if (y > 0) {
             if (grid[x][y - 1] == 0) {
                 grid[x][y + length - 1] = 0;
                 grid[x][y - 1] = grid[x][y];
