@@ -6,8 +6,8 @@ public class Grid {
     private int[][] grid;
     private Vehicle[] vehicles;
 
-    private int amount_of_vehicles;
     private int car_number = 1;
+    private int amount_of_vehicles;
 
     // constructor
     public Grid(int size, int amount_of_vehicles) {
@@ -15,6 +15,23 @@ public class Grid {
         this.grid = new int[size][size];
         this.amount_of_vehicles = amount_of_vehicles;
         this.vehicles = new Vehicle[amount_of_vehicles + 1];
+    }
+
+    public Grid(Grid previous) {
+        this.size = previous.size;
+        this.amount_of_vehicles = previous.amount_of_vehicles;
+
+        this.grid = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                grid[j][i] = previous.grid[j][i];
+            }
+        }
+
+        this.vehicles = new Vehicle[amount_of_vehicles + 1];
+        for (int i = 1; i <= amount_of_vehicles; i++) {
+            vehicles[i] = previous.vehicles[i];
+        }
     }
 
     // adds vehicle to grid and array of all vehicles
@@ -31,87 +48,97 @@ public class Grid {
     }
 
     // moves vehicle 1 position right
-    /*
-     * First check whether x+vehicle.getLength() passes the grid size (to avoid ArrayIndexOutOfBoundsException).
-     * Also make sure it's the first car_number of the car and not the middle/last one, to avoid
-     * cars being slashed into pieces (like this: 110000 -> NOT 100100 but 011000).
-     * Also check whether the next index is indeed a 'free' spot (value 0).
-     */
-    public void moveRight(int car_nr) {
+    public Grid moveRight(int car_nr) {
+        int x = vehicles[car_nr].getX();
+        int y = vehicles[car_nr].getY();
+        int length = vehicles[car_nr].getLength();
+
+        grid[x + length][y] = grid[x][y];
+        grid[x][y] = 0;
+        vehicles[car_nr].addX(x + 1);
+
+        return this;
+    }
+
+    // moves vehicle 1 position left
+    public Grid moveLeft(int car_nr) {
+        int x = vehicles[car_nr].getX();
+        int y = vehicles[car_nr].getY();
+        int length = vehicles[car_nr].getLength();
+
+        grid[x + length - 1][y] = 0;
+        grid[x - 1][y] = grid[x][y];
+        vehicles[car_nr].addX(x - 1);
+
+        return this;
+    }
+
+    // moves vehicle 1 position down
+    public Grid moveDown(int car_nr) {
+        int x = vehicles[car_nr].getX();
+        int y = vehicles[car_nr].getY();
+        int length = vehicles[car_nr].getLength();
+
+        grid[x][y + length] = grid[x][y];
+        grid[x][y] = 0;
+        vehicles[car_nr].addY(y + 1);
+
+        return this;
+    }
+
+    // moves vehicle 1 position up
+    public Grid moveUp(int car_nr) {
+        int x = vehicles[car_nr].getX();
+        int y = vehicles[car_nr].getY();
+        int length = vehicles[car_nr].getLength();
+
+        grid[x][y + length - 1] = 0;
+        grid[x][y - 1] = grid[x][y];
+        vehicles[car_nr].addY(y - 1);
+
+        return this;
+    }
+
+    public boolean moveRightIsPossible(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
         if (x + length < size) {
-            if (grid[x + length][y] == 0) {
-                grid[x + length][y] = grid[x][y];
-                grid[x][y] = 0;
-                vehicles[car_nr].addX(x + 1);
-            }
+            return grid[x + length][y] == 0;
         }
+        return false;
     }
 
-    // moves vehicle 1 position left
-    /*
-     * First check whether x-1 passes the grid size (to avoid ArrayIndexOutOfBoundsException).
-     * Also make sure it's the first car_number of the car and not the middle/last one, to avoid
-     * cars being slashed into pieces (like this: 110000 -> NOT 100100 but 011000).
-     * Also check whether the next index is indeed a 'free' spot (value 0).
-     */
-    public void moveLeft(int car_nr) {
+    public boolean moveLeftIsPossible(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
-        int length = vehicles[car_nr].getLength();
 
         if (x > 0) {
-            if (grid[x - 1][y] == 0) {
-                grid[x + length - 1][y] = 0;
-                grid[x - 1][y] = grid[x][y];
-                vehicles[car_nr].addX(x - 1);
-            }
+            return grid[x - 1][y] == 0;
         }
+        return false;
     }
 
-    // moves vehicle 1 position down
-        /*
-     * First check whether y+vehicle.getLength() passes the grid size (to avoid ArrayIndexOutOfBoundsException).
-     * Also make sure it's the first car_number of the car and not the middle/last one, to avoid
-     * cars being slashed into pieces (like this: 110000 -> NOT 100100 but 011000).
-     * Also check whether the next index is indeed a 'free' spot (value 0).
-     */
-    public void moveDown(int car_nr) {
+    public boolean moveDownIsPossible(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
 
         if (y + length < size) {
-            if (grid[x][y + length] == 0) {
-                grid[x][y + length] = grid[x][y];
-                grid[x][y] = 0;
-                vehicles[car_nr].addY(y + 1);
-            }
+            return grid[x][y + length] == 0;
         }
+        return false;
     }
 
-    // moves vehicle 1 position up
-    /*
-     * First check whether y-1 passes the grid size (to avoid ArrayIndexOutOfBoundsException).
-     * Also make sure it's the first car_number of the car and not the middle/last one, to avoid
-     * cars being slashed into pieces (like this: 110000 -> NOT 100100 but 011000).
-     * Also check whether the next index is indeed a 'free' spot (value 0).
-     */
-    public void moveUp(int car_nr) {
+    public boolean moveUpIsPossible(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
-        int length = vehicles[car_nr].getLength();
 
         if (y > 0) {
-            if (grid[x][y - 1] == 0) {
-                grid[x][y + length - 1] = 0;
-                grid[x][y - 1] = grid[x][y];
-                vehicles[car_nr].addY(y - 1);
-            }
+            return grid[x][y - 1] == 0;
         }
+        return false;
     }
 
     // check whether the red car is in front of the exit

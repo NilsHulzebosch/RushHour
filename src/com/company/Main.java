@@ -19,26 +19,14 @@ public class Main {
         grid.addVehicle(true, 2, 3, 0);     // (value 3)
         grid.addVehicle(false, 3, 5, 0);    // (value 8)
         grid.addVehicle(true, 2, 4, 3);     // (value 4)
-        grid.addVehicle(false, 3, 3, 3);    // (value 9)
+        // grid.addVehicle(false, 3, 3, 3);    // (value 9)
         grid.addVehicle(true, 2, 4, 5);     // (value 5)
 
         visualize();
 
-        //grid.moveDown(7);
-        //visualize();
-        //grid.moveUp(6);
-        //grid.moveUp(3);
-        //grid.moveUp(8);
-        //grid.moveUp(9);
-
-        //visualize();
-        //long start = System.nanoTime();
-        //long stop = System.nanoTime();
-        //long runTime = stop - start;
-        //visualize();
-        //System.out.println(runTime);
-
-
+        Grid grid2 = new Grid(grid.moveRight(3));
+        wipeScreen();
+        grid2.printGrid();
     }
 
     // animate the moves
