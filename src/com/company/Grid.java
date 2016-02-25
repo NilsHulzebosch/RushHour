@@ -6,13 +6,15 @@ public class Grid {
     private int[][] grid;
     private Vehicle[] vehicles;
 
+    private int amount_of_vehicles;
     private int car_number = 1;
 
     // constructor
-    public Grid(int size, int amount_of_cars) {
+    public Grid(int size, int amount_of_vehicles) {
         this.size = size;
         this.grid = new int[size][size];
-        this.vehicles = new Vehicle[amount_of_cars + 1];
+        this.amount_of_vehicles = amount_of_vehicles;
+        this.vehicles = new Vehicle[amount_of_vehicles + 1];
     }
 
     // adds vehicle to grid and array of all vehicles
@@ -126,4 +128,36 @@ public class Grid {
             System.out.println();
         }
     }
+
+/*
+private void getPossibleMoves(int car_nr) {
+        int x = vehicles[car_nr].getX();
+        int y = vehicles[car_nr].getY();
+        boolean direction = vehicles[car_nr].getDirection();
+        int length = vehicles[car_nr].getLength();
+
+        if (direction) {
+            // horizontal
+
+            // move right
+            if (grid[x+length][y] == 0) {
+                boolean moveRight = true;
+            } else {
+                boolean moveRight = false;
+            }
+
+            // move left
+            if (grid[x-1][y] == 0) {
+                boolean moveLeft = true;
+            } else {
+                boolean moveLeft = false;
+            }
+
+
+        } else {
+            // vertical
+
+        }
+    }
+*/
 }
