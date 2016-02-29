@@ -30,7 +30,7 @@ public class Grid {
 
         this.vehicles = new Vehicle[amount_of_vehicles + 1];
         for (int i = 1; i <= amount_of_vehicles; i++) {
-            vehicles[i] = previous.vehicles[i];
+            vehicles[i] = new Vehicle(previous.vehicles[i]);
         }
     }
 
@@ -100,6 +100,11 @@ public class Grid {
     }
 
     public boolean moveRightIsPossible(int car_nr) {
+        boolean direction = vehicles[car_nr].getDirection();
+        if (!direction) {
+            return false;
+        }
+
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
@@ -111,6 +116,11 @@ public class Grid {
     }
 
     public boolean moveLeftIsPossible(int car_nr) {
+        boolean direction = vehicles[car_nr].getDirection();
+        if (!direction) {
+            return false;
+        }
+
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
 
@@ -121,6 +131,11 @@ public class Grid {
     }
 
     public boolean moveDownIsPossible(int car_nr) {
+        boolean direction = vehicles[car_nr].getDirection();
+        if (direction) {
+            return false;
+        }
+
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
@@ -132,6 +147,11 @@ public class Grid {
     }
 
     public boolean moveUpIsPossible(int car_nr) {
+        boolean direction = vehicles[car_nr].getDirection();
+        if (direction) {
+            return false;
+        }
+
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
 

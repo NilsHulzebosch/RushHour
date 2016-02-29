@@ -1,5 +1,5 @@
 package com.company;
-import java.util.Random;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -19,14 +19,65 @@ public class Main {
         grid.addVehicle(true, 2, 3, 0);     // (value 3)
         grid.addVehicle(false, 3, 5, 0);    // (value 8)
         grid.addVehicle(true, 2, 4, 3);     // (value 4)
-        // grid.addVehicle(false, 3, 3, 3);    // (value 9)
+        grid.addVehicle(false, 3, 3, 3);    // (value 9)
         grid.addVehicle(true, 2, 4, 5);     // (value 5)
 
-        visualize();
+        // temporary implementation of "queue"
+        ArrayList<Grid> queue = new ArrayList<>();
+        int counter = 1;
+        queue.add(grid);
 
-        Grid grid2 = new Grid(grid.moveRight(3));
-        wipeScreen();
-        grid2.printGrid();
+        // adds all possible following grids to "queue"
+        for (int i = 1; i <= AMOUNT_OF_VEHICLES; i++) {
+            if (grid.moveRightIsPossible(i) && grid.moveLeftIsPossible(i)) {
+                Grid new_grid = new Grid(grid);
+                new_grid.moveRight(i);
+                queue.add(new_grid);
+
+                Grid new_grid2 = new Grid(grid);
+                new_grid2.moveLeft(i);
+                queue.add(new_grid2);
+
+                counter = counter + 2;
+            } else if (grid.moveRightIsPossible(i)) {
+                Grid new_grid = new Grid(grid);
+                new_grid.moveRight(i);
+                queue.add(new_grid);
+                counter++;
+            } else if (grid.moveLeftIsPossible(i)) {
+                Grid new_grid = new Grid(grid);
+                new_grid.moveLeft(i);
+                queue.add(new_grid);
+                counter++;
+            } else if (grid.moveDownIsPossible(i) && grid.moveUpIsPossible(i)) {
+                Grid new_grid = new Grid(grid);
+                new_grid.moveDown(i);
+                queue.add(new_grid);
+
+                Grid new_grid2 = new Grid(grid);
+                new_grid2.moveUp(i);
+                queue.add(new_grid2);
+                counter = counter + 2;
+            } else if (grid.moveDownIsPossible(i)) {
+                Grid new_grid = new Grid(grid);
+                new_grid.moveDown(i);
+                queue.add(new_grid);
+                counter++;
+            } else if (grid.moveUpIsPossible(i)) {
+                Grid new_grid = new Grid(grid);
+                new_grid.moveUp(i);
+                queue.add(new_grid);
+                counter++;
+            }
+        }
+
+        for (int i = 0; i < counter; i++) {
+            wipeScreen();
+            queue.get(i).printGrid();
+            delay(3000);
+        }
+
+
     }
 
     // animate the moves

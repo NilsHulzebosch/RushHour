@@ -17,6 +17,13 @@ public class Vehicle {
         this.y = y;
     }
 
+    public Vehicle(Vehicle previous) {
+        this.direction = previous.direction;
+        this.length = previous.length;
+        this.x = previous.x;
+        this.y = previous.y;
+    }
+
     // returns direction (horizontal or vertical)
     public boolean getDirection() {
         return direction;
