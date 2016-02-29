@@ -48,7 +48,7 @@ public class Grid {
     }
 
     // moves vehicle 1 position right
-    public Grid moveRight(int car_nr) {
+    public void moveRight(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
@@ -56,12 +56,10 @@ public class Grid {
         grid[x + length][y] = grid[x][y];
         grid[x][y] = 0;
         vehicles[car_nr].addX(x + 1);
-
-        return this;
     }
 
     // moves vehicle 1 position left
-    public Grid moveLeft(int car_nr) {
+    public void moveLeft(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
@@ -69,12 +67,10 @@ public class Grid {
         grid[x + length - 1][y] = 0;
         grid[x - 1][y] = grid[x][y];
         vehicles[car_nr].addX(x - 1);
-
-        return this;
     }
 
     // moves vehicle 1 position down
-    public Grid moveDown(int car_nr) {
+    public void moveDown(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
@@ -82,12 +78,10 @@ public class Grid {
         grid[x][y + length] = grid[x][y];
         grid[x][y] = 0;
         vehicles[car_nr].addY(y + 1);
-
-        return this;
     }
 
     // moves vehicle 1 position up
-    public Grid moveUp(int car_nr) {
+    public void moveUp(int car_nr) {
         int x = vehicles[car_nr].getX();
         int y = vehicles[car_nr].getY();
         int length = vehicles[car_nr].getLength();
@@ -95,8 +89,6 @@ public class Grid {
         grid[x][y + length - 1] = 0;
         grid[x][y - 1] = grid[x][y];
         vehicles[car_nr].addY(y - 1);
-
-        return this;
     }
 
     public boolean moveRightIsPossible(int car_nr) {
