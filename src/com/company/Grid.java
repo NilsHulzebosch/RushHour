@@ -1,4 +1,6 @@
 package com.company;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 import java.util.ArrayList;
 
@@ -9,6 +11,9 @@ public class Grid {
 
     private int vehicle_number = 1;
 
+    /* ArrayList Declaration */
+    ArrayList<Grid> queue = new ArrayList<>();
+    int counter = 1;
 
     // constructor
     public Grid(int size) {
