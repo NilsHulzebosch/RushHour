@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.ArrayList;
+
 public class Grid {
 
     private int size;
@@ -103,6 +105,58 @@ public class Grid {
     // check whether the red car is in front of the exit
     public boolean goalReached() {
         return grid[size - 1][size/2 - 1] != null && grid[size - 1][size / 2 - 1].getNumber() == 1;
+    }
+
+    public ArrayList<Grid> generateAllChildren() {
+        ArrayList<Grid> array_list = new ArrayList<>();
+
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                if (grid[x][y] != null) {
+
+                    boolean direction = grid[x][y].getDirection();
+                    // only if object is the most left or top of the entire vehicle
+                    if ((direction && (x == 0 || (x > 0 && grid[x][y] != grid[x - 1][y]))) ||
+                            (!direction && (y == 0 || (y > 0 && grid[x][y] != grid[x][y - 1])))) {
+
+                        if (moveRightIsPossible(x, y) && moveLeftIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
+                            new_grid.moveRight(x, y);
+                            array_list.add(new_grid);
+
+                            Grid new_grid2 = new Grid(this);
+                            new_grid2.moveLeft(x, y);
+                            array_list.add(new_grid2);
+                        } else if (moveRightIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
+                            new_grid.moveRight(x, y);
+                            array_list.add(new_grid);
+                        } else if (moveLeftIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
+                            new_grid.moveLeft(x, y);
+                            array_list.add(new_grid);
+                        } else if (moveDownIsPossible(x, y) && moveUpIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
+                            new_grid.moveDown(x, y);
+                            array_list.add(new_grid);
+
+                            Grid new_grid2 = new Grid(this);
+                            new_grid2.moveUp(x, y);
+                            array_list.add(new_grid2);
+                        } else if (moveDownIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
+                            new_grid.moveDown(x, y);
+                            array_list.add(new_grid);
+                        } else if (moveUpIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
+                            new_grid.moveUp(x, y);
+                            array_list.add(new_grid);
+                        }
+                    }
+                }
+            }
+        }
+        return array_list;
     }
 
     // prints out representation of grid

@@ -24,70 +24,20 @@ public class Main {
 
         visualize();
 
-        /*
-        // temporary implementation of "queue"
-        ArrayList<Grid> queue = new ArrayList<>();
-        int counter = 1;
-        queue.add(grid);
+        ArrayList<Grid> array_list = grid.generateAllChildren();
+        wipeScreen();
+        array_list.get(0).printGrid();
+        delay(3000);
 
-        // adds all possible following grids to "queue"
-        for (int i = 1; i <= AMOUNT_OF_VEHICLES; i++) {
-            if (grid.moveRightIsPossible(i) && grid.moveLeftIsPossible(i)) {
-                Grid new_grid = new Grid(grid);
-                new_grid.moveRight(i);
-                queue.add(new_grid);
-
-                Grid new_grid2 = new Grid(grid);
-                new_grid2.moveLeft(i);
-                queue.add(new_grid2);
-
-                counter = counter + 2;
-            } else if (grid.moveRightIsPossible(i)) {
-                Grid new_grid = new Grid(grid);
-                new_grid.moveRight(i);
-                queue.add(new_grid);
-                counter++;
-            } else if (grid.moveLeftIsPossible(i)) {
-                Grid new_grid = new Grid(grid);
-                new_grid.moveLeft(i);
-                queue.add(new_grid);
-                counter++;
-            } else if (grid.moveDownIsPossible(i) && grid.moveUpIsPossible(i)) {
-                Grid new_grid = new Grid(grid);
-                new_grid.moveDown(i);
-                queue.add(new_grid);
-
-                Grid new_grid2 = new Grid(grid);
-                new_grid2.moveUp(i);
-                queue.add(new_grid2);
-                counter = counter + 2;
-            } else if (grid.moveDownIsPossible(i)) {
-                Grid new_grid = new Grid(grid);
-                new_grid.moveDown(i);
-                queue.add(new_grid);
-                counter++;
-            } else if (grid.moveUpIsPossible(i)) {
-                Grid new_grid = new Grid(grid);
-                new_grid.moveUp(i);
-                queue.add(new_grid);
-                counter++;
-            }
-        }
-
-        for (int i = 0; i < counter; i++) {
-            wipeScreen();
-            queue.get(i).printGrid();
-            delay(3000);
-        }
-        */
-
+        wipeScreen();
+        array_list.get(1).printGrid();
     }
 
     // animate the moves
     private static void visualize() {
         wipeScreen();
         grid.printGrid();
-        delay(1000);
+        delay(3000);
     }
 
     // delay an amount of milliseconds
