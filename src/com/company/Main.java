@@ -22,6 +22,9 @@ public class Main {
         grid.addVehicle(false, 3, 3, 3);    // (value 9)
         grid.addVehicle(true, 2, 4, 5);     // (value 5)
 
+        visualize();
+
+        /*
         // temporary implementation of "queue"
         ArrayList<Grid> queue = new ArrayList<>();
         int counter = 1;
@@ -76,7 +79,7 @@ public class Main {
             queue.get(i).printGrid();
             delay(3000);
         }
-
+        */
 
     }
 

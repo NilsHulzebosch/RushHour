@@ -3,200 +3,119 @@ package com.company;
 public class Grid {
 
     private int size;
-    private int[][] grid;
-    private Vehicle[] vehicles;
-
-    private int car_number = 1;
     private int amount_of_vehicles;
+    private Vehicle[][] grid;
+
+    private int vehicle_number = 1;
+
 
     // constructor
     public Grid(int size, int amount_of_vehicles) {
         this.size = size;
-        this.grid = new int[size][size];
+        this.grid = new Vehicle[size][size];
         this.amount_of_vehicles = amount_of_vehicles;
-        this.vehicles = new Vehicle[amount_of_vehicles + 1];
     }
 
     public Grid(Grid previous) {
         this.size = previous.size;
         this.amount_of_vehicles = previous.amount_of_vehicles;
 
-        this.grid = new int[size][size];
+        this.grid = new Vehicle[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 grid[j][i] = previous.grid[j][i];
             }
         }
-
-        this.vehicles = new Vehicle[amount_of_vehicles + 1];
-        for (int i = 1; i <= amount_of_vehicles; i++) {
-            vehicles[i] = new Vehicle(previous.vehicles[i]);
-        }
     }
 
     // adds vehicle to grid and array of all vehicles
     public void addVehicle(boolean direction, int length, int x, int y) {
+        Vehicle vehicle = new Vehicle(direction, length, vehicle_number);
+
         for (int i = 0; i < length; i++) {
             if (direction) {
-                grid[x + i][y] = car_number;
+                grid[x + i][y] = vehicle;
             } else {
-                grid[x][y + i] = car_number;
+                grid[x][y + i] = vehicle;
             }
         }
-        vehicles[car_number] = new Vehicle(direction, length, x, y);
-        car_number++;
+        vehicle_number++;
     }
 
     // moves vehicle 1 position right
-    public void moveRight(int car_nr) {
-        int x = vehicles[car_nr].getX();
-        int y = vehicles[car_nr].getY();
-        int length = vehicles[car_nr].getLength();
+    public void moveRight(int x, int y) {
+        int length = grid[x][y].getLength();
 
         grid[x + length][y] = grid[x][y];
-        grid[x][y] = 0;
-        vehicles[car_nr].addX(x + 1);
+        grid[x][y] = null;
     }
 
     // moves vehicle 1 position left
-    public void moveLeft(int car_nr) {
-        int x = vehicles[car_nr].getX();
-        int y = vehicles[car_nr].getY();
-        int length = vehicles[car_nr].getLength();
+    public void moveLeft(int x, int y) {
+        int length = grid[x][y].getLength();
 
-        grid[x + length - 1][y] = 0;
+        grid[x + length - 1][y] = null;
         grid[x - 1][y] = grid[x][y];
-        vehicles[car_nr].addX(x - 1);
     }
 
     // moves vehicle 1 position down
-    public void moveDown(int car_nr) {
-        int x = vehicles[car_nr].getX();
-        int y = vehicles[car_nr].getY();
-        int length = vehicles[car_nr].getLength();
+    public void moveDown(int x, int y) {
+        int length = grid[x][y].getLength();
 
         grid[x][y + length] = grid[x][y];
-        grid[x][y] = 0;
-        vehicles[car_nr].addY(y + 1);
+        grid[x][y] = null;
     }
 
     // moves vehicle 1 position up
-    public void moveUp(int car_nr) {
-        int x = vehicles[car_nr].getX();
-        int y = vehicles[car_nr].getY();
-        int length = vehicles[car_nr].getLength();
+    public void moveUp(int x, int y) {
+        int length = grid[x][y].getLength();
 
-        grid[x][y + length - 1] = 0;
+        grid[x][y + length - 1] = null;
         grid[x][y - 1] = grid[x][y];
-        vehicles[car_nr].addY(y - 1);
     }
 
-    public boolean moveRightIsPossible(int car_nr) {
-        boolean direction = vehicles[car_nr].getDirection();
-        if (!direction) {
-            return false;
-        }
+    public boolean moveRightIsPossible(int x, int y) {
+        boolean direction = grid[x][y].getDirection();
+        int length = grid[x][y].getLength();
 
-        int x = vehicles[car_nr].getX();
-        int y = vehicles[car_nr].getY();
-        int length = vehicles[car_nr].getLength();
-
-        if (x + length < size) {
-            return grid[x + length][y] == 0;
-        }
-        return false;
+        return direction && x + length < size && grid[x + length][y] == null;
     }
 
-    public boolean moveLeftIsPossible(int car_nr) {
-        boolean direction = vehicles[car_nr].getDirection();
-        if (!direction) {
-            return false;
-        }
+    public boolean moveLeftIsPossible(int x, int y) {
+        boolean direction = grid[x][y].getDirection();
 
-        int x = vehicles[car_nr].getX();
-        int y = vehicles[car_nr].getY();
-
-        if (x > 0) {
-            return grid[x - 1][y] == 0;
-        }
-        return false;
+        return direction && x > 0 && grid[x - 1][y] == null;
     }
 
-    public boolean moveDownIsPossible(int car_nr) {
-        boolean direction = vehicles[car_nr].getDirection();
-        if (direction) {
-            return false;
-        }
+    public boolean moveDownIsPossible(int x, int y) {
+        boolean direction = grid[x][y].getDirection();
+        int length = grid[x][y].getLength();
 
-        int x = vehicles[car_nr].getX();
-        int y = vehicles[car_nr].getY();
-        int length = vehicles[car_nr].getLength();
-
-        if (y + length < size) {
-            return grid[x][y + length] == 0;
-        }
-        return false;
+        return !direction && y + length < size && grid[x][y + length] == null;
     }
 
-    public boolean moveUpIsPossible(int car_nr) {
-        boolean direction = vehicles[car_nr].getDirection();
-        if (direction) {
-            return false;
-        }
+    public boolean moveUpIsPossible(int x, int y) {
+        boolean direction = grid[x][y].getDirection();
 
-        int x = vehicles[car_nr].getX();
-        int y = vehicles[car_nr].getY();
-
-        if (y > 0) {
-            return grid[x][y - 1] == 0;
-        }
-        return false;
+        return !direction && y > 0 && grid[x][y - 1] == null;
     }
 
     // check whether the red car is in front of the exit
     public boolean goalReached() {
-        return vehicles[1].getX() == size - 2;
+        return grid[size - 1][size/2 - 1] != null && grid[size - 1][size / 2 - 1].getNumber() == 1;
     }
 
     // prints out representation of grid
     public void printGrid() {
-        for (int i = 0; i < size; i++){
-            for (int j = 0; j < size; j++){
-                System.out.print(grid[j][i] + " ");
+            for (int y = 0; y < size; y++){
+                for (int x = 0; x < size; x++){
+                if (grid[x][y] == null) {
+                    System.out.print("0 ");
+                } else {
+                    System.out.print(grid[x][y].getNumber() + " ");
+                }
             }
             System.out.println();
         }
     }
-
-/*
-private void getPossibleMoves(int car_nr) {
-        int x = vehicles[car_nr].getX();
-        int y = vehicles[car_nr].getY();
-        boolean direction = vehicles[car_nr].getDirection();
-        int length = vehicles[car_nr].getLength();
-
-        if (direction) {
-            // horizontal
-
-            // move right
-            if (grid[x+length][y] == 0) {
-                boolean moveRight = true;
-            } else {
-                boolean moveRight = false;
-            }
-
-            // move left
-            if (grid[x-1][y] == 0) {
-                boolean moveLeft = true;
-            } else {
-                boolean moveLeft = false;
-            }
-
-
-        } else {
-            // vertical
-
-        }
-    }
-*/
 }

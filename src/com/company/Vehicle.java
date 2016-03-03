@@ -6,22 +6,23 @@ public class Vehicle {
     // false = vertical
     private boolean direction;
     private int length;
-    private int x;
-    private int y;
+    private int vehicle_number;
 
     // constructor
-    public Vehicle(boolean direction, int length, int x, int y) {
+    public Vehicle(boolean direction, int length, int vehicle_number) {
         this.direction = direction;
         this.length = length;
-        this.x = x;
-        this.y = y;
+        this.vehicle_number = vehicle_number;
     }
 
     public Vehicle(Vehicle previous) {
         this.direction = previous.direction;
         this.length = previous.length;
-        this.x = previous.x;
-        this.y = previous.y;
+    }
+
+    // returns vehicle number
+    public int getNumber() {
+        return vehicle_number;
     }
 
     // returns direction (horizontal or vertical)
@@ -32,25 +33,5 @@ public class Vehicle {
     // returns length
     public int getLength() {
         return length;
-    }
-
-    // adds x position
-    public void addX(int x) {
-        this.x = x;
-    }
-
-    // adds y position
-    public void addY(int y) {
-        this.y = y;
-    }
-
-    // returns x position
-    public int getX() {
-        return x;
-    }
-
-    // returns y position
-    public int getY() {
-        return y;
     }
 }
