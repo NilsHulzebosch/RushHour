@@ -5,22 +5,19 @@ import java.util.ArrayList;
 public class Grid {
 
     private int size;
-    private int amount_of_vehicles;
     private Vehicle[][] grid;
 
     private int vehicle_number = 1;
 
 
     // constructor
-    public Grid(int size, int amount_of_vehicles) {
+    public Grid(int size) {
         this.size = size;
         this.grid = new Vehicle[size][size];
-        this.amount_of_vehicles = amount_of_vehicles;
     }
 
     public Grid(Grid previous) {
         this.size = previous.size;
-        this.amount_of_vehicles = previous.amount_of_vehicles;
 
         this.grid = new Vehicle[size][size];
         for (int i = 0; i < size; i++) {

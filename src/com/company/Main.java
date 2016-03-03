@@ -4,9 +4,8 @@ import java.util.ArrayList;
 public class Main {
 
     private static final int GRID_SIZE = 6;
-    private static final int AMOUNT_OF_VEHICLES = 9;
 
-    private static Grid grid = new Grid(GRID_SIZE, AMOUNT_OF_VEHICLES);
+    private static Grid grid = new Grid(GRID_SIZE);
 
 
     public static void main(String[] args) {
