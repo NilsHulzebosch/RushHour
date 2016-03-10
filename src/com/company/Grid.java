@@ -180,15 +180,30 @@ public class Grid {
             for (int j = 0; j < size; j++) {
                 if (grid[j][i] != null) {
                     key += grid[j][i].getNumber() * i * j * grid[j][i].getLength();
+                    if (grid[j][i].getDirection()) {
+                        key += i + j;
+                    } else {
+                        key += (i * j) ^ (i + j);
+                    }
+                } else {
+                    key += j * i;
                 }
             }
         }
-
         return key;
     }
 
     public boolean equals(Object o) {
         Grid child_grid = (Grid)o;
-        return Arrays.deepEquals(this.getGrid(), child_grid.getGrid());
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (this.getGrid()[j][i] != child_grid.getGrid()[j][i]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+        // return Arrays.deepEquals(this.getGrid(), child_grid.getGrid());
     }
 }

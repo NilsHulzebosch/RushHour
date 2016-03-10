@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Main {
 
-    private static final int GRID_SIZE = 6;
+    private static final int GRID_SIZE = 9;
 
     private static Grid grid = new Grid(GRID_SIZE);
 
@@ -12,8 +12,9 @@ public class Main {
     private static HashSet<Grid> hashset = new HashSet<>();
 
     public static void main(String[] args) {
-        addFirstPuzzle();
+        //addFirstPuzzle();
         //addSecondPuzzle();
+        addFourthPuzzle();
         grid.printGrid();
         System.out.println();
 
@@ -100,10 +101,10 @@ public class Main {
         grid.addVehicle(true, 3, 5, 3);
         grid.addVehicle(false, 2, 0, 4);
         grid.addVehicle(false, 2, 3, 4);
+        grid.addVehicle(false, 3, 2, 5);
         grid.addVehicle(true, 3, 5, 5);
         grid.addVehicle(false, 3, 8, 5);
         grid.addVehicle(true, 2, 0, 6);
-        grid.addVehicle(false, 3, 2, 6);
         grid.addVehicle(false, 2, 3, 6);
         grid.addVehicle(true, 2, 4, 6);
         grid.addVehicle(false, 2, 0, 7);
