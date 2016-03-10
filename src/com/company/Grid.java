@@ -1,8 +1,5 @@
 package com.company;
 import java.util.ArrayList;
-import java.util.LinkedList;
-
-import java.util.ArrayList;
 
 public class Grid {
 
@@ -10,10 +7,6 @@ public class Grid {
     private Vehicle[][] grid;
 
     private int vehicle_number = 1;
-
-    /* ArrayList Declaration */
-    ArrayList<Grid> queue = new ArrayList<>();
-    int counter = 1;
 
     // constructor
     public Grid(int size) {
@@ -30,6 +23,10 @@ public class Grid {
                 grid[j][i] = previous.grid[j][i];
             }
         }
+    }
+
+    public Vehicle[][] getGrid() {
+        return grid;
     }
 
     // adds vehicle to grid and array of all vehicles

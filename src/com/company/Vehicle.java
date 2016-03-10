@@ -15,11 +15,6 @@ public class Vehicle {
         this.vehicle_number = vehicle_number;
     }
 
-    public Vehicle(Vehicle previous) {
-        this.direction = previous.direction;
-        this.length = previous.length;
-    }
-
     // returns vehicle number
     public int getNumber() {
         return vehicle_number;
