@@ -9,7 +9,7 @@ public class Main {
 
     /* Linked List Declaration */
     private static LinkedList<Grid> queue = new LinkedList<>();
-    private static ArrayList<Grid> array_list = new ArrayList<>();
+    private static HashSet<Grid> hashset = new HashSet<>();
 
     public static void main(String[] args) {
         addFirstPuzzle();
@@ -19,7 +19,7 @@ public class Main {
 
         // add first grid to queue
         queue.add(grid);
-        array_list.add(grid);
+        hashset.add(grid);
 
         boolean isFinished = false;
         while(!isFinished) {
@@ -31,17 +31,9 @@ public class Main {
                 Grid child = new_children.get(i);
                 //child.printGrid();
 
-                boolean cycle = false;
-                for (int j = 0; j < array_list.size(); j++) {
-                    if (Arrays.deepEquals(array_list.get(j).getGrid(), child.getGrid())) {
-                        cycle = true;
-                        break;
-                    }
-                }
-
-                if (!cycle) {
+                if (!hashset.contains(child)) {
                     queue.add(child);
-                    array_list.add(child);
+                    hashset.add(child);
                 }
 
                 if(child.goalReached()) {
@@ -143,4 +135,5 @@ public class Main {
             System.out.println();
         }
     }
+
 }

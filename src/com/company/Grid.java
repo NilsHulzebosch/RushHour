@@ -1,5 +1,6 @@
 package com.company;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Grid {
 
@@ -170,5 +171,24 @@ public class Grid {
             }
             System.out.println();
         }
+    }
+
+    public int hashCode() {
+        int key = 0;
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (grid[j][i] != null) {
+                    key += grid[j][i].getNumber() * i * j * grid[j][i].getLength();
+                }
+            }
+        }
+
+        return key;
+    }
+
+    public boolean equals(Object o) {
+        Grid child_grid = (Grid)o;
+        return Arrays.deepEquals(this.getGrid(), child_grid.getGrid());
     }
 }
