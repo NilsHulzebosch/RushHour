@@ -1,14 +1,19 @@
 package com.company;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
-        solveBreadthFirst(firstPuzzle());
+        ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
         long end = System.currentTimeMillis();
         //solveBreadthFirst(secondPuzzle());
+
+        for (int i = path.size() - 1; i >= 0; i--) {
+            wipeScreen();
+            path.get(i).printGrid();
+            delay(2000);
+        }
 
         System.out.println("Time = " + (end - start));
     }
