@@ -1,13 +1,12 @@
 package com.company;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Grid {
 
     private int size;
     private Vehicle[][] grid;
-
     private int vehicle_number = 1;
+    private Grid parent_grid;
 
     // constructor
     public Grid(int size) {
@@ -17,6 +16,7 @@ public class Grid {
 
     public Grid(Grid previous) {
         this.size = previous.size;
+        this.parent_grid = previous;
 
         this.grid = new Vehicle[size][size];
         for (int i = 0; i < size; i++) {
@@ -119,44 +119,37 @@ public class Grid {
                     if ((direction && (x == 0 || (x > 0 && grid[x][y] != grid[x - 1][y]))) ||
                             (!direction && (y == 0 || (y > 0 && grid[x][y] != grid[x][y - 1])))) {
 
+                        Grid new_grid = new Grid(this);
+                        Grid new_grid2 = new Grid(this);
                         if (moveRightIsPossible(x, y) && moveLeftIsPossible(x, y)) {
-                            Grid new_grid = new Grid(this);
                             new_grid.moveRight(x, y);
-                            array_list.add(new_grid);
 
-                            Grid new_grid2 = new Grid(this);
                             new_grid2.moveLeft(x, y);
                             array_list.add(new_grid2);
                         } else if (moveRightIsPossible(x, y)) {
-                            Grid new_grid = new Grid(this);
                             new_grid.moveRight(x, y);
-                            array_list.add(new_grid);
                         } else if (moveLeftIsPossible(x, y)) {
-                            Grid new_grid = new Grid(this);
                             new_grid.moveLeft(x, y);
-                            array_list.add(new_grid);
                         } else if (moveDownIsPossible(x, y) && moveUpIsPossible(x, y)) {
-                            Grid new_grid = new Grid(this);
                             new_grid.moveDown(x, y);
-                            array_list.add(new_grid);
 
-                            Grid new_grid2 = new Grid(this);
                             new_grid2.moveUp(x, y);
                             array_list.add(new_grid2);
                         } else if (moveDownIsPossible(x, y)) {
-                            Grid new_grid = new Grid(this);
                             new_grid.moveDown(x, y);
-                            array_list.add(new_grid);
                         } else if (moveUpIsPossible(x, y)) {
-                            Grid new_grid = new Grid(this);
                             new_grid.moveUp(x, y);
-                            array_list.add(new_grid);
                         }
+                        array_list.add(new_grid);
                     }
                 }
             }
         }
         return array_list;
+    }
+
+    public Grid getParent() {
+        return parent_grid;
     }
 
     // prints out representation of grid
@@ -194,7 +187,7 @@ public class Grid {
     }
 
     public boolean equals(Object o) {
-        Grid child_grid = (Grid)o;
+        Grid child_grid = (Grid) o;
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {

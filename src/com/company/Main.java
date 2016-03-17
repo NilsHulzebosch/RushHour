@@ -1,44 +1,42 @@
 package com.company;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
 
-    private static final int GRID_SIZE = 9;
-
-    private static Grid grid = new Grid(GRID_SIZE);
-
-    /* Linked List Declaration */
-    private static LinkedList<Grid> queue = new LinkedList<>();
-    private static HashSet<Grid> hashset = new HashSet<>();
-
     public static void main(String[] args) {
-        //addFirstPuzzle();
-        //addSecondPuzzle();
-        addFourthPuzzle();
-        grid.printGrid();
-        System.out.println();
+        long start = System.currentTimeMillis();
+        solveBreadthFirst(firstPuzzle());
+        long end = System.currentTimeMillis();
+        //solveBreadthFirst(secondPuzzle());
+
+        System.out.println("Time = " + (end - start));
+    }
+
+    private static ArrayList<Grid> solveBreadthFirst(Grid grid) {
+        LinkedList<Grid> queue = new LinkedList<>();
+        HashSet<Grid> hash_set = new HashSet<>();
 
         // add first grid to queue
         queue.add(grid);
-        hashset.add(grid);
+        hash_set.add(grid);
 
-        boolean isFinished = false;
-        while(!isFinished) {
+        boolean goalReached = false;
+        while(!goalReached) {
 
             // retrieve first element and generate all children
             Grid first_grid = queue.getFirst();
             ArrayList<Grid> new_children = first_grid.generateAllChildren();
             for (int i = 0; i < new_children.size(); i++) {
                 Grid child = new_children.get(i);
-                //child.printGrid();
 
-                if (!hashset.contains(child)) {
+                if (!hash_set.contains(child)) {
                     queue.add(child);
-                    hashset.add(child);
+                    hash_set.add(child);
                 }
 
                 if(child.goalReached()) {
-                    isFinished = true;
+                    goalReached = true;
                     break;
                 }
             }
@@ -46,34 +44,43 @@ public class Main {
             // remove first element from grid
             queue.remove();
         }
+        // queue.getLast().printGrid();
+        return getPath(queue.getLast());
+    }
 
-        queue.getLast().printGrid();
+    private static ArrayList<Grid> getPath(Grid child) {
+        ArrayList<Grid> path = new ArrayList<>();
+        path.add(child);
 
-        /*
-        // print all grids in the queue
-        for (int i = 0; i < queue.size(); i++) {
-            wipeScreen();
-            //System.out.println(queue.size());
-            queue.get(i).printGrid();
-            delay(1000);
+        while (child.getParent() != null) {
+            Grid parent = child.getParent();
+            path.add(parent);
+            child = parent;
         }
-        */
+
+        return path;
     }
 
     // adds the first 6x6 board configuration from our assignment
-    private static void addFirstPuzzle() {
-        grid.addVehicle(true, 2, 3, 2);     // red car (gets value 1)
-        grid.addVehicle(false, 2, 0, 4);    // (value 6)
-        grid.addVehicle(true, 2, 1, 4);     // (value 2)
-        grid.addVehicle(false, 3, 2, 0);    // (value 7)
-        grid.addVehicle(true, 2, 3, 0);     // (value 3)
-        grid.addVehicle(false, 3, 5, 0);    // (value 8)
-        grid.addVehicle(true, 2, 4, 3);     // (value 4)
-        grid.addVehicle(false, 3, 3, 3);    // (value 9)
-        grid.addVehicle(true, 2, 4, 5);     // (value 5)
+    private static Grid firstPuzzle() {
+        Grid grid = new Grid(6);
+
+        grid.addVehicle(true, 2, 3, 2); // red car (gets value 1)
+        grid.addVehicle(false, 2, 0, 4);
+        grid.addVehicle(true, 2, 1, 4);
+        grid.addVehicle(false, 3, 2, 0);
+        grid.addVehicle(true, 2, 3, 0);
+        grid.addVehicle(false, 3, 5, 0);
+        grid.addVehicle(true, 2, 4, 3);
+        grid.addVehicle(false, 3, 3, 3);
+        grid.addVehicle(true, 2, 4, 5);
+
+        return grid;
     }
 
-    private static void addSecondPuzzle() {
+    private static Grid secondPuzzle() {
+        Grid grid = new Grid(6);
+
         grid.addVehicle(true, 2, 2, 2);
         grid.addVehicle(true, 2, 2, 0);
         grid.addVehicle(true, 2, 4, 0);
@@ -87,9 +94,13 @@ public class Main {
         grid.addVehicle(false, 2, 3, 4);
         grid.addVehicle(true, 2, 4, 4);
         grid.addVehicle(true, 2, 4, 5);
+
+        return grid;
     }
 
-    private static void addFourthPuzzle() {
+    private static Grid fourthPuzzle() {
+        Grid grid = new Grid(9);
+
         grid.addVehicle(true, 2, 1, 4);
         grid.addVehicle(false, 2, 0, 0);
         grid.addVehicle(true, 3, 1, 0);
@@ -112,13 +123,8 @@ public class Main {
         grid.addVehicle(true, 3, 1, 8);
         grid.addVehicle(true, 2, 5, 8);
         grid.addVehicle(true, 2, 7, 8);
-    }
 
-    // animate the moves
-    private static void visualize() {
-        wipeScreen();
-        grid.printGrid();
-        delay(3000);
+        return grid;
     }
 
     // delay an amount of milliseconds
