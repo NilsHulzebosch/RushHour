@@ -157,9 +157,13 @@ public class Grid {
             for (int y = 0; y < size; y++){
                 for (int x = 0; x < size; x++){
                 if (grid[x][y] == null) {
-                    System.out.print("0 ");
+                    System.out.print("0  ");
                 } else {
-                    System.out.print(grid[x][y].getNumber() + " ");
+                    if(grid[x][y].getNumber() < 10) {
+                        System.out.print(grid[x][y].getNumber() + "  ");
+                    } else {
+                        System.out.print(grid[x][y].getNumber() + " ");
+                    }
                 }
             }
             System.out.println();
