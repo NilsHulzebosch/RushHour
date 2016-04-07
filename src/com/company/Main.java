@@ -5,24 +5,17 @@ public class Main {
 
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
-        ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
+        //ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(secondPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(thirdPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());
+        ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(seventhPuzzle());
-
-
         long end = System.currentTimeMillis();
-        //solveBreadthFirst(secondPuzzle());
 
-        //for (int i = path.size() - 1; i >= 0; i--) {
-        //    wipeScreen();
-        //    path.get(i).printGrid();
-        //    delay(2000);
-        //}
-
+        // path1.get(0).printGrid();
+        printPath(path);
         System.out.println("Time = " + (end - start));
     }
 
@@ -58,20 +51,16 @@ public class Main {
             queue.remove();
         }
         // queue.getLast().printGrid();
-        return getPath(queue.getLast());
+        return (queue.getLast().getPath());
     }
 
-    private static ArrayList<Grid> getPath(Grid child) {
-        ArrayList<Grid> path = new ArrayList<>();
-        path.add(child);
-
-        while (child.getParent() != null) {
-            Grid parent = child.getParent();
-            path.add(parent);
-            child = parent;
+    private static void printPath(ArrayList<Grid> path) {
+        for (int i = path.size() - 1; i >= 0; i--) {
+            wipeScreen();
+            path.get(i).printGrid();
+            //delay(1000);
         }
-
-        return path;
+        System.out.println("# of moves: " + path.size());
     }
 
     // adds the first 6x6 board configuration from our assignment
@@ -162,7 +151,6 @@ public class Main {
         grid.addVehicle(true, 3, 1, 8);
         grid.addVehicle(true, 2, 5, 8);
         grid.addVehicle(true, 2, 7, 8);
-
         return grid;
     }
 

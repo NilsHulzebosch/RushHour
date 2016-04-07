@@ -104,7 +104,11 @@ public class Grid {
 
     // check whether the red car is in front of the exit
     public boolean goalReached() {
-        return grid[size - 1][size/2 - 1] != null && grid[size - 1][size / 2 - 1].getNumber() == 1;
+        if (size % 2 == 0) {
+            return grid[size - 1][size / 2 - 1] != null && grid[size - 1][size / 2 - 1].getNumber() == 1;
+        } else {
+            return grid[size - 1][size / 2] != null && grid[size - 1][size / 2].getNumber() == 1;
+        }
     }
 
     public ArrayList<Grid> generateAllChildren() {
@@ -123,24 +127,30 @@ public class Grid {
                         Grid new_grid2 = new Grid(this);
                         if (moveRightIsPossible(x, y) && moveLeftIsPossible(x, y)) {
                             new_grid.moveRight(x, y);
+                            array_list.add(new_grid);
 
                             new_grid2.moveLeft(x, y);
                             array_list.add(new_grid2);
                         } else if (moveRightIsPossible(x, y)) {
                             new_grid.moveRight(x, y);
+                            array_list.add(new_grid);
                         } else if (moveLeftIsPossible(x, y)) {
                             new_grid.moveLeft(x, y);
+                            array_list.add(new_grid);
                         } else if (moveDownIsPossible(x, y) && moveUpIsPossible(x, y)) {
                             new_grid.moveDown(x, y);
+                            array_list.add(new_grid);
 
                             new_grid2.moveUp(x, y);
                             array_list.add(new_grid2);
+                            array_list.add(new_grid2);
                         } else if (moveDownIsPossible(x, y)) {
                             new_grid.moveDown(x, y);
+                            array_list.add(new_grid);
                         } else if (moveUpIsPossible(x, y)) {
                             new_grid.moveUp(x, y);
+                            array_list.add(new_grid);
                         }
-                        array_list.add(new_grid);
                     }
                 }
             }
@@ -150,6 +160,20 @@ public class Grid {
 
     public Grid getParent() {
         return parent_grid;
+    }
+
+    public ArrayList<Grid> getPath() {
+        ArrayList<Grid> path = new ArrayList<>();
+        path.add(this);
+        Grid child = this;
+
+        while (child.getParent() != null) {
+            Grid parent = child.getParent();
+            path.add(parent);
+            child = parent;
+        }
+
+        return path;
     }
 
     // prints out representation of grid
