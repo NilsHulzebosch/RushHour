@@ -8,30 +8,34 @@ public class Main {
         //ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(secondPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(thirdPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
-        ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());
+        ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
+        //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(seventhPuzzle());
         long end = System.currentTimeMillis();
 
-        // path1.get(0).printGrid();
+        //path.get(0).printGrid();
         printPath(path);
         System.out.println("Time = " + (end - start));
     }
 
     private static ArrayList<Grid> solveBreadthFirst(Grid grid) {
-        LinkedList<Grid> queue = new LinkedList<>();
+        //LinkedList<Grid> queue = new LinkedList<>();
+        Comparator<Grid> comparator = new PathSizeComparator();
+        PriorityQueue<Grid> queue = new PriorityQueue<Grid>(10, comparator);
+
         HashSet<Grid> hash_set = new HashSet<>();
 
         // add first grid to queue
         queue.add(grid);
         hash_set.add(grid);
 
+        Grid EndState = null;
         boolean goalReached = false;
         while(!goalReached) {
 
             // retrieve first element and generate all children
-            Grid first_grid = queue.getFirst();
+            Grid first_grid = queue.peek();
             ArrayList<Grid> new_children = first_grid.generateAllChildren();
             for (int i = 0; i < new_children.size(); i++) {
                 Grid child = new_children.get(i);
@@ -42,6 +46,7 @@ public class Main {
                 }
 
                 if(child.goalReached()) {
+                    EndState = child;
                     goalReached = true;
                     break;
                 }
@@ -51,7 +56,7 @@ public class Main {
             queue.remove();
         }
         // queue.getLast().printGrid();
-        return (queue.getLast().getPath());
+        return (EndState.getPath());
     }
 
     private static void printPath(ArrayList<Grid> path) {
@@ -60,7 +65,7 @@ public class Main {
             path.get(i).printGrid();
             //delay(1000);
         }
-        System.out.println("# of moves: " + path.size());
+        System.out.println(path.get(0).getPathSize());
     }
 
     // adds the first 6x6 board configuration from our assignment

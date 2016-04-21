@@ -1,5 +1,6 @@
 package com.company;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Grid {
 
@@ -7,6 +8,7 @@ public class Grid {
     private Vehicle[][] grid;
     private int vehicle_number = 1;
     private Grid parent_grid;
+    private int path_size = 0;
 
     // constructor
     public Grid(int size) {
@@ -14,9 +16,11 @@ public class Grid {
         this.grid = new Vehicle[size][size];
     }
 
+    // constructor
     public Grid(Grid previous) {
         this.size = previous.size;
         this.parent_grid = previous;
+        this.path_size = previous.path_size + 1;
 
         this.grid = new Vehicle[size][size];
         for (int i = 0; i < size; i++) {
@@ -162,6 +166,10 @@ public class Grid {
         return parent_grid;
     }
 
+    public int getPathSize() {
+        return path_size;
+    }
+
     public ArrayList<Grid> getPath() {
         ArrayList<Grid> path = new ArrayList<>();
         path.add(this);
@@ -200,14 +208,14 @@ public class Grid {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (grid[j][i] != null) {
-                    key += grid[j][i].getNumber() * i * j * grid[j][i].getLength();
+                    key += grid[j][i].getNumber() * i * j * (grid[j][i].getLength() + i * j);
                     if (grid[j][i].getDirection()) {
                         key += i + j;
                     } else {
-                        key += (i * j) ^ (i + j);
+                        key += i * j;
                     }
                 } else {
-                    key += j * i;
+                    key *= i + j;
                 }
             }
         }
@@ -225,6 +233,7 @@ public class Grid {
             }
         }
         return true;
-        // return Arrays.deepEquals(this.getGrid(), child_grid.getGrid());
+
+        //return Arrays.deepEquals(this.getGrid(), child_grid.getGrid());
     }
 }
