@@ -8,7 +8,9 @@ public class Grid {
     private Vehicle[][] grid;
     private int vehicle_number = 1;
     private Grid parent_grid;
+
     private int path_size = 0;
+    private int path_estimate = 0;
 
     // constructor
     public Grid(int size) {
@@ -21,6 +23,7 @@ public class Grid {
         this.size = previous.size;
         this.parent_grid = previous;
         this.path_size = previous.path_size + 1;
+        this.path_estimate = calculatePathEstimate();
 
         this.grid = new Vehicle[size][size];
         for (int i = 0; i < size; i++) {
@@ -168,6 +171,34 @@ public class Grid {
 
     public int getPathSize() {
         return path_size;
+    }
+
+    public int getPathEstimate() {
+        return path_estimate;
+    }
+
+    public int calculatePathEstimate() {
+        int stepEstimate = 0;
+        if (size % 2 == 0) {
+            int i = 0;
+            while (grid[i][size/2 - 1] == null || grid[i][size/2 - 1].getNumber() != 1) {
+                i++;
+            }
+            //for (i; i < size; i++) {
+            //    if (grid[i][size/2 - 1] != null && grid[i][size/2 - 1] != 1;
+            //    ) {
+
+            //    }
+            //    grid[i][size/2 - 1];
+            //}
+        } else {
+            for (int i = 0; i < size; i++) {
+
+                grid[i][size/2];
+            }
+        }
+
+
     }
 
     public ArrayList<Grid> getPath() {
