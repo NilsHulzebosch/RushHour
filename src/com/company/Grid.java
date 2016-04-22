@@ -23,7 +23,6 @@ public class Grid {
         this.size = previous.size;
         this.parent_grid = previous;
         this.path_size = previous.path_size + 1;
-        this.path_estimate = calculatePathEstimate();
 
         this.grid = new Vehicle[size][size];
         for (int i = 0; i < size; i++) {
@@ -134,28 +133,35 @@ public class Grid {
                         Grid new_grid2 = new Grid(this);
                         if (moveRightIsPossible(x, y) && moveLeftIsPossible(x, y)) {
                             new_grid.moveRight(x, y);
+                            new_grid.calculatePathEstimate();
                             array_list.add(new_grid);
 
                             new_grid2.moveLeft(x, y);
+                            new_grid2.calculatePathEstimate();
                             array_list.add(new_grid2);
                         } else if (moveRightIsPossible(x, y)) {
                             new_grid.moveRight(x, y);
+                            new_grid.calculatePathEstimate();
                             array_list.add(new_grid);
                         } else if (moveLeftIsPossible(x, y)) {
                             new_grid.moveLeft(x, y);
+                            new_grid.calculatePathEstimate();
                             array_list.add(new_grid);
                         } else if (moveDownIsPossible(x, y) && moveUpIsPossible(x, y)) {
                             new_grid.moveDown(x, y);
+                            new_grid.calculatePathEstimate();
                             array_list.add(new_grid);
 
                             new_grid2.moveUp(x, y);
-                            array_list.add(new_grid2);
+                            new_grid2.calculatePathEstimate();
                             array_list.add(new_grid2);
                         } else if (moveDownIsPossible(x, y)) {
                             new_grid.moveDown(x, y);
+                            new_grid.calculatePathEstimate();
                             array_list.add(new_grid);
                         } else if (moveUpIsPossible(x, y)) {
                             new_grid.moveUp(x, y);
+                            new_grid.calculatePathEstimate();
                             array_list.add(new_grid);
                         }
                     }
@@ -177,28 +183,26 @@ public class Grid {
         return path_estimate;
     }
 
-    public int calculatePathEstimate() {
-        int stepEstimate = 0;
+    public void calculatePathEstimate() {
+        int goal_y;
         if (size % 2 == 0) {
-            int i = 0;
-            while (grid[i][size/2 - 1] == null || grid[i][size/2 - 1].getNumber() != 1) {
-                i++;
-            }
-            //for (i; i < size; i++) {
-            //    if (grid[i][size/2 - 1] != null && grid[i][size/2 - 1] != 1;
-            //    ) {
-
-            //    }
-            //    grid[i][size/2 - 1];
-            //}
+            goal_y = size/2 - 1;
         } else {
-            for (int i = 0; i < size; i++) {
-
-                grid[i][size/2];
-            }
+            goal_y = size/2;
         }
 
+        int x = 0;
+        while (grid[x][goal_y] == null || grid[x][goal_y].getNumber() != 1) {
+            x++;
+        }
 
+        path_estimate = size - x - 2;
+
+        for (int i = x + 2; i < size; i++) {
+            if (grid[i][goal_y] != null) {
+                path_estimate += 1;
+            }
+        }
     }
 
     public ArrayList<Grid> getPath() {
