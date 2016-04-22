@@ -20,22 +20,19 @@ public class Main {
     }
 
     private static ArrayList<Grid> solveBreadthFirst(Grid grid) {
-        //LinkedList<Grid> queue = new LinkedList<>();
         Comparator<Grid> comparator = new PathSizeComparator();
         PriorityQueue<Grid> queue = new PriorityQueue<Grid>(10, comparator);
 
         HashSet<Grid> hash_set = new HashSet<>();
 
-        // add first grid to queue
+        // add first grid to queue and hashset
         queue.add(grid);
         hash_set.add(grid);
 
-        Grid EndState = null;
         boolean goalReached = false;
         while(!goalReached) {
-
-            // retrieve first element and generate all children
-            Grid first_grid = queue.peek();
+            // retrieve and remove first element and generate it's children
+            Grid first_grid = queue.poll();
             ArrayList<Grid> new_children = first_grid.generateAllChildren();
             for (int i = 0; i < new_children.size(); i++) {
                 Grid child = new_children.get(i);
@@ -43,20 +40,16 @@ public class Main {
                 if (!hash_set.contains(child)) {
                     queue.add(child);
                     hash_set.add(child);
+                    continue;
                 }
 
                 if(child.goalReached()) {
-                    EndState = child;
-                    goalReached = true;
-                    break;
+                    return child.getPath();
                 }
             }
 
-            // remove first element from grid
-            queue.remove();
         }
-        // queue.getLast().printGrid();
-        return (EndState.getPath());
+        return null;
     }
 
     private static void printPath(ArrayList<Grid> path) {

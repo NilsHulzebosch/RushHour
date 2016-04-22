@@ -201,6 +201,42 @@ public class Grid {
         for (int i = x + 2; i < size; i++) {
             if (grid[i][goal_y] != null) {
                 path_estimate += 1;
+
+                //if (grid[i][goal_y-1] != null && grid[i][goal_y+1] != null &&
+                //        (grid[i][goal_y-2] != null || grid[i][goal_y+2] != null)) {
+                //    path_estimate += 1;
+                //}
+
+ 
+
+
+                if (grid[i][goal_y-1] != null &&
+                        grid[i][goal_y-1].getNumber() != grid[i][goal_y].getNumber()) {
+                    if (grid[i][goal_y-1].getLength() == 2 && !grid[i][goal_y-1].getDirection()) {
+                        if (goal_y-3 > 0 && grid[i][goal_y-3] != null) {
+                            path_estimate += 1;
+                        }
+                    }
+                    if (grid[i][goal_y-1].getLength() == 3 && !grid[i][goal_y-1].getDirection()) {
+                        if (goal_y-4 > 0 && grid[i][goal_y-4] != null) {
+                            path_estimate += 1;
+                        }
+                    }
+                }
+
+                if (grid[i][goal_y+1] != null &&
+                        grid[i][goal_y+1].getNumber() != grid[i][goal_y].getNumber()) {
+                    if (grid[i][goal_y+1].getLength() == 2 && !grid[i][goal_y-1].getDirection()) {
+                        if (goal_y+3 < 5 && grid[i][goal_y+3] != null) {
+                            path_estimate += 1;
+                        }
+                    }
+                    if (grid[i][goal_y-1].getLength() == 3 && !grid[i][goal_y-1].getDirection()) {
+                        if (goal_y+4 < 5 && grid[i][goal_y+4] != null) {
+                            path_estimate += 1;
+                        }
+                    }
+                }
             }
         }
     }
