@@ -29,10 +29,21 @@ public class Main {
         queue.add(grid);
         hash_set.add(grid);
 
+        int counter = 0;
         boolean goalReached = false;
         while(!goalReached) {
+
             // retrieve and remove first element and generate it's children
             Grid first_grid = queue.poll();
+            if(counter == 500000 || counter == 1000000 || counter == 1500000 ||
+                    counter == 2000000 || counter == 3000000 || counter == 6000000 ||
+                    counter == 10000000 || counter == 13000000 || counter == 17000000 ||
+                    counter == 20000000 || counter == 23000000 || counter == 30000000) {
+                System.out.println("Counter is: " + counter);
+                first_grid.printGrid();
+                System.out.println();
+            }
+            counter++;
             ArrayList<Grid> new_children = first_grid.generateAllChildren();
             for (int i = 0; i < new_children.size(); i++) {
                 Grid child = new_children.get(i);

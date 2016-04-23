@@ -1,6 +1,7 @@
 package com.company;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class Grid {
 
@@ -184,6 +185,7 @@ public class Grid {
     }
 
     public void calculatePathEstimate() {
+        // get row of red car based on board size
         int goal_y;
         if (size % 2 == 0) {
             goal_y = size/2 - 1;
@@ -191,54 +193,239 @@ public class Grid {
             goal_y = size/2;
         }
 
+        // find the position of the red car
         int x = 0;
         while (grid[x][goal_y] == null || grid[x][goal_y].getNumber() != 1) {
             x++;
         }
 
+        // distance from red car to goal position
         path_estimate = size - x - 2;
 
+        // (minimum) amount of blocking cars
         for (int i = x + 2; i < size; i++) {
             if (grid[i][goal_y] != null) {
                 path_estimate += 1;
 
-                //if (grid[i][goal_y-1] != null && grid[i][goal_y+1] != null &&
-                //        (grid[i][goal_y-2] != null || grid[i][goal_y+2] != null)) {
-                //    path_estimate += 1;
-                //}
+                HashSet<Integer> carNumbers = new HashSet<>();
+                path_estimate += blockingCarsCalculator(i, goal_y, 1, carNumbers);
+                //System.out.println(blockingCarsCalculator(i, goal_y, 1, carNumbers));
 
- 
+            }
+        }
+    }
 
+    // calculates how many cars are blocking the red car (using recursion)
+    // LET OP: lange code, moet indien mogelijk worden ingekort
+    public int blockingCarsCalculator(int x, int y, int currentAmount, HashSet<Integer> carNumbers) {
+        int amountOfBlockingCars = currentAmount;
+        int number = grid[x][y].getNumber();
+        boolean direction = grid[x][y].getDirection();
 
-                if (grid[i][goal_y-1] != null &&
-                        grid[i][goal_y-1].getNumber() != grid[i][goal_y].getNumber()) {
-                    if (grid[i][goal_y-1].getLength() == 2 && !grid[i][goal_y-1].getDirection()) {
-                        if (goal_y-3 > 0 && grid[i][goal_y-3] != null) {
-                            path_estimate += 1;
+        // set all booleans to false
+        boolean leftIsBlocked = false;
+        boolean rightIsBlocked = false;
+        boolean topIsBlocked = false;
+        boolean bottomIsBlocked = false;
+
+        // if this car is not used to calculate blocking cars yet, add it to the HashSet and proceed
+        // this is to prevent infinite loops
+        if (!carNumbers.contains(number) && currentAmount < 15) {
+            carNumbers.add(number);
+
+            // input car is horizontal
+            if (direction) {
+
+                // check the left side
+                if (x - 1 >= 0) {
+                    if (grid[x - 1][y] == null) {
+                        leftIsBlocked = false;
+                    } else {
+                        if (grid[x - 1][y] != null &&
+                                grid[x - 1][y].getNumber() != number) {
+                            leftIsBlocked = true;
+                            amountOfBlockingCars += blockingCarsCalculator(x - 1, y, 0, carNumbers);
+                        } else if (grid[x - 1][y] != null &&
+                                grid[x - 1][y].getNumber() == number) {
+
+                            // check one step further to the left
+                            if (x - 2 >= 0) {
+                                if (grid[x - 2][y] == null) {
+                                    leftIsBlocked = false;
+                                } else {
+                                    if (grid[x - 2][y] != null &&
+                                            grid[x - 2][y].getNumber() != number) {
+                                        leftIsBlocked = true;
+                                        amountOfBlockingCars += blockingCarsCalculator(x - 2, y, 0, carNumbers);
+                                    } else if (grid[x - 2][y] != null &&
+                                            grid[x - 2][y].getNumber() == number) {
+
+                                        // check one step further to the left (for cars with length 3)
+                                        if (x - 3 >= 0) {
+                                            if (grid[x - 3][y] == null) {
+                                                leftIsBlocked = false;
+                                            } else {
+                                                leftIsBlocked = true;
+                                                amountOfBlockingCars += blockingCarsCalculator(x - 3, y, 0, carNumbers);
+                                            }
+                                        } else {
+                                            leftIsBlocked = true;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-                    if (grid[i][goal_y-1].getLength() == 3 && !grid[i][goal_y-1].getDirection()) {
-                        if (goal_y-4 > 0 && grid[i][goal_y-4] != null) {
-                            path_estimate += 1;
-                        }
-                    }
+                } else if (x == 0) {
+                    leftIsBlocked = true;
                 }
 
-                if (grid[i][goal_y+1] != null &&
-                        grid[i][goal_y+1].getNumber() != grid[i][goal_y].getNumber()) {
-                    if (grid[i][goal_y+1].getLength() == 2 && !grid[i][goal_y-1].getDirection()) {
-                        if (goal_y+3 < 5 && grid[i][goal_y+3] != null) {
-                            path_estimate += 1;
+                // check the right side
+                if (x + 1 < size) {
+                    if (grid[x + 1][y] == null) {
+                        rightIsBlocked = false;
+                    } else {
+                        if (grid[x + 1][y] != null &&
+                                grid[x + 1][y].getNumber() != number) {
+                            rightIsBlocked = true;
+                            amountOfBlockingCars += blockingCarsCalculator(x + 1, y, 0, carNumbers);
+                        } else if (grid[x + 1][y] != null &&
+                                grid[x + 1][y].getNumber() == number) {
+
+                            // check one step further to the right
+                            if (x + 2 < size) {
+                                if (grid[x + 2][y] == null) {
+                                    rightIsBlocked = false;
+                                } else {
+                                    if (grid[x + 2][y] != null &&
+                                            grid[x + 2][y].getNumber() != number) {
+                                        rightIsBlocked = true;
+                                        amountOfBlockingCars += blockingCarsCalculator(x + 2, y, 0, carNumbers);
+                                    } else if (grid[x + 2][y] != null &&
+                                            grid[x + 2][y].getNumber() == number) {
+
+                                        // check one step further to the right (for cars with length 3)
+                                        if (x + 3 < size) {
+                                            if (grid[x + 3][y] == null) {
+                                                rightIsBlocked = false;
+                                            } else {
+                                                rightIsBlocked = true;
+                                                amountOfBlockingCars += blockingCarsCalculator(x + 3, y, 0, carNumbers);
+                                            }
+                                        } else {
+                                            rightIsBlocked = true;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-                    if (grid[i][goal_y-1].getLength() == 3 && !grid[i][goal_y-1].getDirection()) {
-                        if (goal_y+4 < 5 && grid[i][goal_y+4] != null) {
-                            path_estimate += 1;
+                } else if (x + 1 == size) {
+                    rightIsBlocked = true;
+                }
+            }
+
+            // input car is vertical
+            if (!direction) {
+
+                // check the top side
+                if (y - 1 >= 0) {
+                    if (grid[x][y - 1] == null) {
+                        topIsBlocked = false;
+                    } else {
+                        if (grid[x][y - 1] != null &&
+                                grid[x][y - 1].getNumber() != number) {
+                            topIsBlocked = true;
+                            amountOfBlockingCars += blockingCarsCalculator(x, y - 1, 0, carNumbers);
+                        } else if (grid[x][y - 1] != null &&
+                                grid[x][y - 1].getNumber() == number) {
+
+                            // check one step further to the top
+                            if (y - 2 >= 0) {
+                                if (grid[x][y - 2] == null) {
+                                    topIsBlocked = false;
+                                } else {
+                                    if (grid[x][y - 2] != null &&
+                                            grid[x][y - 2].getNumber() != number) {
+                                        topIsBlocked = true;
+                                        amountOfBlockingCars += blockingCarsCalculator(x, y - 2, 0, carNumbers);
+                                    } else if (grid[x][y - 2] != null &&
+                                            grid[x][y - 2].getNumber() == number) {
+
+                                        // check one step further to the top (for cars with length 3)
+                                        if (y - 3 >= 0) {
+                                            if (grid[x][y - 3] == null) {
+                                                topIsBlocked = false;
+                                            } else {
+                                                topIsBlocked = true;
+                                                amountOfBlockingCars += blockingCarsCalculator(x, y - 3, 0, carNumbers);
+                                            }
+                                        } else {
+                                            topIsBlocked = true;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
+                } else if (y == 0) {
+                    topIsBlocked = true;
+                }
+
+
+                // check the down side
+                if (y + 1 < size) {
+                    if (grid[x][y + 1] == null) {
+                        bottomIsBlocked = false;
+                    } else {
+                        if (grid[x][y + 1] != null &&
+                                grid[x][y + 1].getNumber() != number) {
+                            bottomIsBlocked = true;
+                            amountOfBlockingCars += blockingCarsCalculator(x, y + 1, 0, carNumbers);
+                        } else if (grid[x][y + 1] != null &&
+                                grid[x][y + 1].getNumber() == number) {
+
+                            // check one step further to the top
+                            if (y + 2 < size) {
+                                if (grid[x][y + 2] == null) {
+                                    bottomIsBlocked = false;
+                                } else {
+                                    if (grid[x][y + 2] != null &&
+                                            grid[x][y + 2].getNumber() != number) {
+                                        bottomIsBlocked = true;
+                                        amountOfBlockingCars += blockingCarsCalculator(x, y + 2, 0, carNumbers);
+                                    } else if (grid[x][y + 2] != null &&
+                                            grid[x][y + 2].getNumber() == number) {
+
+                                        // check one step further to the top (for cars with length 3)
+                                        if (y + 3 < size) {
+                                            if (grid[x][y + 3] == null) {
+                                                bottomIsBlocked = false;
+                                            } else {
+                                                bottomIsBlocked = true;
+                                                amountOfBlockingCars += blockingCarsCalculator(x, y + 3, 0, carNumbers);
+                                            }
+                                        } else {
+                                            bottomIsBlocked = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (y + 1 == size) {
+                    bottomIsBlocked = true;
                 }
             }
         }
+
+        // if two sides of a car are blocked, it will take AT LEAST one move (extra) to move the current car
+        if((leftIsBlocked && rightIsBlocked) ||
+                (topIsBlocked && bottomIsBlocked)) {
+            amountOfBlockingCars++;
+        }
+
+        return amountOfBlockingCars;
     }
 
     public ArrayList<Grid> getPath() {
