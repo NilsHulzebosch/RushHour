@@ -9,7 +9,7 @@ public class Main {
         //ArrayList<Grid> path = solveBreadthFirst(secondPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(thirdPuzzle());
         ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());
+        //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());        // kan wss in 51 moves (met de hand gedaan)
         //ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(seventhPuzzle());
         long end = System.currentTimeMillis();
@@ -29,9 +29,13 @@ public class Main {
         queue.add(grid);
         hash_set.add(grid);
 
+        //grid.printGrid();
+        //delay(1000);
+
         int counter = 0;
         boolean goalReached = false;
         while(!goalReached) {
+            //delay(100);
 
             // retrieve and remove first element and generate it's children
             Grid first_grid = queue.poll();

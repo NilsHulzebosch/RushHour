@@ -208,6 +208,7 @@ public class Grid {
                 path_estimate += 1;
 
                 HashSet<Integer> carNumbers = new HashSet<>();
+                carNumbers.add(1);
                 path_estimate += blockingCarsCalculator(i, goal_y, 1, carNumbers);
                 //System.out.println(blockingCarsCalculator(i, goal_y, 1, carNumbers));
 
@@ -222,15 +223,65 @@ public class Grid {
         int number = grid[x][y].getNumber();
         boolean direction = grid[x][y].getDirection();
 
+        //System.out.println(carNumbers);
+
         // set all booleans to false
         boolean leftIsBlocked = false;
         boolean rightIsBlocked = false;
         boolean topIsBlocked = false;
         boolean bottomIsBlocked = false;
 
+        // if the number is 1, the red car is blocking some (sequence of) cars that are (/is) blocking the red car
+        // so we HAVE to move the red car to the left, so check the blocking cars on the left
+        if(number == 1) {
+            // check the left side
+            if (x - 1 >= 0) {
+                if (grid[x - 1][y] == null) {
+                    leftIsBlocked = false;
+                } else {
+                    if (grid[x - 1][y] != null &&
+                            grid[x - 1][y].getNumber() != number) {
+                        leftIsBlocked = true;
+                        amountOfBlockingCars += blockingCarsCalculator(x - 1, y, 0, carNumbers);
+                    } else if (grid[x - 1][y] != null &&
+                            grid[x - 1][y].getNumber() == number) {
+
+                        // check one step further to the left
+                        if (x - 2 >= 0) {
+                            if (grid[x - 2][y] == null) {
+                                leftIsBlocked = false;
+                            } else {
+                                if (grid[x - 2][y] != null &&
+                                        grid[x - 2][y].getNumber() != number) {
+                                    leftIsBlocked = true;
+                                    amountOfBlockingCars += blockingCarsCalculator(x - 2, y, 0, carNumbers);
+                                } else if (grid[x - 2][y] != null &&
+                                        grid[x - 2][y].getNumber() == number) {
+
+                                    // check one step further to the left (for cars with length 3)
+                                    if (x - 3 >= 0) {
+                                        if (grid[x - 3][y] == null) {
+                                            leftIsBlocked = false;
+                                        } else {
+                                            leftIsBlocked = true;
+                                            amountOfBlockingCars += blockingCarsCalculator(x - 3, y, 0, carNumbers);
+                                        }
+                                    } else {
+                                        leftIsBlocked = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else if (x == 0) {
+                leftIsBlocked = true;
+            }
+        }
+
         // if this car is not used to calculate blocking cars yet, add it to the HashSet and proceed
         // this is to prevent infinite loops
-        if (!carNumbers.contains(number) && currentAmount < 15) {
+        if (!carNumbers.contains(number) && currentAmount < 35) {
             carNumbers.add(number);
 
             // input car is horizontal
@@ -422,7 +473,7 @@ public class Grid {
         // if two sides of a car are blocked, it will take AT LEAST one move (extra) to move the current car
         if((leftIsBlocked && rightIsBlocked) ||
                 (topIsBlocked && bottomIsBlocked)) {
-            amountOfBlockingCars++;
+            amountOfBlockingCars += 2;
         }
 
         return amountOfBlockingCars;
