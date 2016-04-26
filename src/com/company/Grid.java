@@ -12,6 +12,7 @@ public class Grid {
 
     private int path_size = 0;
     private int path_estimate = 0;
+    private int score = 0;
 
     // constructor
     public Grid(int size) {
@@ -23,7 +24,7 @@ public class Grid {
     public Grid(Grid previous) {
         this.size = previous.size;
         this.parent_grid = previous;
-        this.path_size = previous.path_size + 1;
+        //this.path_size = previous.path_size + 1;
 
         this.grid = new Vehicle[size][size];
         for (int i = 0; i < size; i++) {
@@ -134,35 +135,43 @@ public class Grid {
                         Grid new_grid2 = new Grid(this);
                         if (moveRightIsPossible(x, y) && moveLeftIsPossible(x, y)) {
                             new_grid.moveRight(x, y);
-                            new_grid.calculatePathEstimate();
+                            //new_grid.calculatePathEstimate();
+                            new_grid.calculateScore();          // added
                             array_list.add(new_grid);
 
                             new_grid2.moveLeft(x, y);
-                            new_grid2.calculatePathEstimate();
+                            //new_grid2.calculatePathEstimate();
+                            new_grid2.calculateScore();          // added
                             array_list.add(new_grid2);
                         } else if (moveRightIsPossible(x, y)) {
                             new_grid.moveRight(x, y);
-                            new_grid.calculatePathEstimate();
+                            //new_grid.calculatePathEstimate();
+                            new_grid.calculateScore();          // added
                             array_list.add(new_grid);
                         } else if (moveLeftIsPossible(x, y)) {
                             new_grid.moveLeft(x, y);
-                            new_grid.calculatePathEstimate();
+                            //new_grid.calculatePathEstimate();
+                            new_grid.calculateScore();          // added
                             array_list.add(new_grid);
                         } else if (moveDownIsPossible(x, y) && moveUpIsPossible(x, y)) {
                             new_grid.moveDown(x, y);
-                            new_grid.calculatePathEstimate();
+                            //new_grid.calculatePathEstimate();
+                            new_grid.calculateScore();          // added
                             array_list.add(new_grid);
 
                             new_grid2.moveUp(x, y);
-                            new_grid2.calculatePathEstimate();
+                            //new_grid2.calculatePathEstimate();
+                            new_grid2.calculateScore();          // added
                             array_list.add(new_grid2);
                         } else if (moveDownIsPossible(x, y)) {
                             new_grid.moveDown(x, y);
-                            new_grid.calculatePathEstimate();
+                            //new_grid.calculatePathEstimate();
+                            new_grid.calculateScore();          // added
                             array_list.add(new_grid);
                         } else if (moveUpIsPossible(x, y)) {
                             new_grid.moveUp(x, y);
-                            new_grid.calculatePathEstimate();
+                            //new_grid.calculatePathEstimate();
+                            new_grid.calculateScore();          // added
                             array_list.add(new_grid);
                         }
                     }
@@ -184,13 +193,56 @@ public class Grid {
         return path_estimate;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    // UNDER CONSTRUCTION
+    public void calculateScore() {
+        // get row of red car based on board size
+        int goal_y;
+        if (size % 2 == 0) {
+            goal_y = size / 2 - 1;
+        } else {
+            goal_y = size / 2;
+        }
+
+        // find the position of the red car
+        int x1 = 0;
+        while (grid[x1][goal_y] == null || grid[x1][goal_y].getNumber() != 1) {
+            x1++;
+        }
+
+        score += (size - x1) * 20;
+
+        int maximumX;
+        if (size - x1 > 5) {
+            maximumX = x1+5;
+        } else if (size - x1 > 2) {
+            maximumX = x1+2;
+        } else if (size - x1 == 2) {
+            maximumX = x1+1;
+        } else {
+            maximumX = x1;
+        }
+        //System.out.println(maximumX);
+        for (int y = goal_y-2; y < goal_y+3; y++) {
+            for (int x = x1; x <= maximumX; x++) {
+                if (grid[x][y] != null) {
+                    score += 10;                    // misschien is 20 beter
+                }
+            }
+        }
+        //System.out.println(score);
+    }
+
     public void calculatePathEstimate() {
         // get row of red car based on board size
         int goal_y;
         if (size % 2 == 0) {
-            goal_y = size/2 - 1;
+            goal_y = size / 2 - 1;
         } else {
-            goal_y = size/2;
+            goal_y = size / 2;
         }
 
         // find the position of the red car
@@ -209,8 +261,8 @@ public class Grid {
 
                 HashSet<Integer> carNumbers = new HashSet<>();
                 carNumbers.add(1);
-                path_estimate += blockingCarsCalculator(i, goal_y, 1, carNumbers);
-                //System.out.println(blockingCarsCalculator(i, goal_y, 1, carNumbers));
+                //path_estimate += blockingCarsCalculator(i, goal_y, 1, carNumbers);
+                System.out.println(blockingCarsCalculator(i, goal_y, 1, carNumbers));
 
             }
         }
@@ -223,7 +275,7 @@ public class Grid {
         int number = grid[x][y].getNumber();
         boolean direction = grid[x][y].getDirection();
 
-        //System.out.println(carNumbers);
+        System.out.println(carNumbers);
 
         // set all booleans to false
         boolean leftIsBlocked = false;

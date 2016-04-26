@@ -8,14 +8,14 @@ public class Main {
         //ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(secondPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(thirdPuzzle());
-        ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
+        //ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());        // kan wss in 51 moves (met de hand gedaan)
-        //ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
+        ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(seventhPuzzle());
         long end = System.currentTimeMillis();
 
         //path.get(0).printGrid();
-        printPath(path);
+        //printPath(path);
         System.out.println("Time = " + (end - start));
     }
 
@@ -29,7 +29,7 @@ public class Main {
         queue.add(grid);
         hash_set.add(grid);
 
-        //grid.printGrid();
+        grid.printGrid();
         //delay(1000);
 
         int counter = 0;
@@ -39,6 +39,9 @@ public class Main {
 
             // retrieve and remove first element and generate it's children
             Grid first_grid = queue.poll();
+            //first_grid.printGrid();
+            //System.out.println();
+            //delay(10);
             if(counter == 500000 || counter == 1000000 || counter == 1500000 ||
                     counter == 2000000 || counter == 3000000 || counter == 6000000 ||
                     counter == 10000000 || counter == 13000000 || counter == 17000000 ||
