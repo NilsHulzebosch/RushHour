@@ -5,10 +5,10 @@ public class Main {
 
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
-        //ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
+        ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(secondPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(thirdPuzzle());
-        ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
+        //ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(seventhPuzzle());
@@ -16,12 +16,13 @@ public class Main {
 
         //path.get(0).printGrid();
         printPath(path);
+        new Visualization(path.get(0));
         System.out.println("Time = " + (end - start));
     }
 
     private static ArrayList<Grid> solveBreadthFirst(Grid grid) {
         Comparator<Grid> comparator = new PathSizeComparator();
-        PriorityQueue<Grid> queue = new PriorityQueue<Grid>(10, comparator);
+        PriorityQueue<Grid> queue = new PriorityQueue<>(10, comparator);
 
         HashSet<Grid> hash_set = new HashSet<>();
 
