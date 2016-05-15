@@ -8,20 +8,21 @@ public class Main {
         //ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(secondPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(thirdPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
+        ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());        // kan wss in 51 moves (met de hand gedaan)
-        ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
+        //ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(seventhPuzzle());
         long end = System.currentTimeMillis();
 
-        //path.get(0).printGrid();
-        //printPath(path);
+        System.out.println();
+        printPath(path);
         System.out.println("Time = " + (end - start));
     }
 
     private static ArrayList<Grid> solveBreadthFirst(Grid grid) {
         Comparator<Grid> comparator = new PathSizeComparator();
         PriorityQueue<Grid> queue = new PriorityQueue<Grid>(10, comparator);
+        PriorityQueue<Grid> temporaryQueue = new PriorityQueue<Grid>(10, comparator);
 
         HashSet<Grid> hash_set = new HashSet<>();
 
@@ -30,42 +31,53 @@ public class Main {
         hash_set.add(grid);
 
         grid.printGrid();
-        //delay(1000);
+        //delay(2000);
 
-        int counter = 0;
+        //System.out.println(queue.peek().calculateMoveFreedom());
+        //delay(2000);
+
+        int counter = 1;
         boolean goalReached = false;
         while(!goalReached) {
-            //delay(100);
+
 
             // retrieve and remove first element and generate it's children
             Grid first_grid = queue.poll();
             //first_grid.printGrid();
-            //System.out.println();
-            //delay(10);
-            if(counter == 500000 || counter == 1000000 || counter == 1500000 ||
-                    counter == 2000000 || counter == 3000000 || counter == 6000000 ||
-                    counter == 10000000 || counter == 13000000 || counter == 17000000 ||
-                    counter == 20000000 || counter == 23000000 || counter == 30000000) {
+            //delay(2000);
+            //for(int i = 0; i < 20; i++) {
+            //    System.out.println();
+            //}
+            //delay(100);
+            if(counter % 30000 == 0) {
                 System.out.println("Counter is: " + counter);
                 first_grid.printGrid();
                 System.out.println();
             }
             counter++;
-            ArrayList<Grid> new_children = first_grid.generateAllChildren();
-            for (int i = 0; i < new_children.size(); i++) {
-                Grid child = new_children.get(i);
 
+            int[][] grid1 = new int[6][6];
+            int[][] grid2 = new int[6][];
+            grid2[0] = grid1[0];
+            grid2[1] = new int[6];
+
+            grid2[2] = grid1[2];
+            grid2[3] = grid1[3];
+            grid2[4] = grid1[4];
+            grid2[5] = grid1[5];
+
+            ArrayList<Grid> new_children = first_grid.generateAllChildren();
+            for (Grid child : new_children) {
                 if (!hash_set.contains(child)) {
                     queue.add(child);
                     hash_set.add(child);
                     continue;
                 }
 
-                if(child.goalReached()) {
+                if (child.goalReached()) {
                     return child.getPath();
                 }
             }
-
         }
         return null;
     }

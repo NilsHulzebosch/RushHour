@@ -17,7 +17,8 @@ public class PathSizeComparator implements Comparator<Grid> {
         return 0;
         */
 
-        // compare function for a-star using a(n un-admissible) score function
+
+        // compare function for a-star using a(n inadmissible) score function
         int a_total = a.getScore();
         int b_total = b.getScore();
 
@@ -27,5 +28,6 @@ public class PathSizeComparator implements Comparator<Grid> {
             return 1;
         }
         return 0;
+
     }
 }
