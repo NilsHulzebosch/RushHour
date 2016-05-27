@@ -11,9 +11,9 @@ public class Main {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         System.out.print("Type in the number of the puzzle you want to solve: ");
+        int puzzleNumber = in.nextInt();
 
         ArrayList<Grid> path;
-        int puzzleNumber = in.nextInt();
         long start = System.currentTimeMillis();
         switch (puzzleNumber) {
             case 1: path = solveBreadthFirst(firstPuzzle()); break;
@@ -33,6 +33,8 @@ public class Main {
     }
 
     private static ArrayList<Grid> solveBreadthFirst(Grid grid) {
+        System.out.println("Puzzle is being solved...");
+
         Comparator<Grid> comparator = new PathSizeComparator();
         PriorityQueue<Grid> queue = new PriorityQueue<>(10, comparator);
         HashSet<Grid> hash_set = new HashSet<>();

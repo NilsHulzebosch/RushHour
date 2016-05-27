@@ -206,8 +206,8 @@ public class Grid {
         }
 
         for (Grid child : children_list) {
-            child.calculatePathEstimate();
-            //child.calculateScore();
+            child.calculateAStarScore();
+            //child.calculateInadmissableScore();
         }
 
         return children_list;
@@ -220,10 +220,10 @@ public class Grid {
 
     // calculates an inadmissible score based on several (inadmissible) heuristics
     // the lower the score, the better the board, the earlier it appears in the PQ
-    public void calculateScore() {
+    public void calculateInadmissableScore() {
         getRedCarPosition();
 
-        // add current path size to score
+        // adds current path size to score
         //score += path_size * 25;
 
         // distanceToGoalPosition: takes the x position of the red car and the score weight
@@ -249,9 +249,10 @@ public class Grid {
         //score += blockingCarBehind_heuristic(red_x, red_y, 200);
     }
 
-    public void calculatePathEstimate() {
+    public void calculateAStarScore() {
         getRedCarPosition();
 
+        // adds current path size to score
         score = path_size;
 
         // distanceToGoalPosition: takes the x position of the red car and the score weight (1)
