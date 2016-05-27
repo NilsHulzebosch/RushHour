@@ -310,7 +310,8 @@ public class Grid {
                     }
                     if (grid[x][y1] != null) {
                         int y2 = goal_y;
-                        while (y2 < size - 1 && grid[x][y2] != null && grid[x][y2].getNumber() == number) {
+                        while (y2 < size - 1 && grid[x][y2] != null &&
+                                grid[x][y2].getNumber() == number) {
                             y2++;
                         }
                         if (grid[x][y2] != null) {
@@ -411,7 +412,8 @@ public class Grid {
         int firstQuadrant = calculateFreeSpace(0, 0, coordinate, coordinate);
         int secondQuadrant = calculateFreeSpace(coordinate, 0, endCoordinate, coordinate);
         int thirdQuadrant = calculateFreeSpace(0, coordinate, coordinate, endCoordinate);
-        int fourthQuadrant = calculateFreeSpace(coordinate, coordinate, endCoordinate, endCoordinate);
+        int fourthQuadrant = calculateFreeSpace(coordinate, coordinate,
+                endCoordinate, endCoordinate);
 
         if(secondQuadrant != 0 && firstQuadrant % secondQuadrant > boundary) {
             quadrantDistributionScore += weight;
