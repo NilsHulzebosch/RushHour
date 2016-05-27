@@ -36,7 +36,7 @@ public class Main {
     private static ArrayList<Grid> solvePuzzle(Grid grid) {
         System.out.println("Puzzle is being solved...");
 
-        Comparator<Grid> comparator = new PathSizeComparator();
+        Comparator<Grid> comparator = new ScoreComparator();
         PriorityQueue<Grid> queue = new PriorityQueue<>(10, comparator);
         HashSet<Grid> hash_set = new HashSet<>();
 

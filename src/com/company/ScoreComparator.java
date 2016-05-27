@@ -1,7 +1,7 @@
 package com.company;
 import java.util.Comparator;
 
-public class PathSizeComparator implements Comparator<Grid> {
+public class ScoreComparator implements Comparator<Grid> {
 
     public int compare(Grid a, Grid b) {
         // compare function for a-star using an admissible heuristic
