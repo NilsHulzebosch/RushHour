@@ -1,8 +1,20 @@
 package com.company;
 import java.util.ArrayList;
-import java.util.HashSet;
+
+/* Table of Contents
+ * 1. Private instance variables / constructors / get
+ * 2. Methods for moving vehicles / adding grids
+ * 3. Methods for the heuristics
+ * 4. Methods for calculating score / path estimate
+ * 5. Methods for the path / grid (visualisation)
+ * 6. Methods for the hash set
+ */
 
 public class Grid {
+
+    /* ****************************************************
+     * 1. Private instance variables / constructors / get *
+     **************************************************** */
 
     private int size;
     private Vehicle[][] grid;
@@ -12,6 +24,9 @@ public class Grid {
     private int path_size = 0;
     private int path_estimate = 0;
     private int score = 0;
+
+    private int red_x;
+    private int red_y;
 
     // constructor
     public Grid(int size) {
@@ -36,6 +51,27 @@ public class Grid {
     public Vehicle[][] getGrid() {
         return grid;
     }
+
+    public Grid getParent() {
+        return parent_grid;
+    }
+
+    public int getPathSize() {
+        return path_size;
+    }
+
+    public int getPathEstimate() {
+        return path_estimate;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+
+    /* ************************************************
+     * 2. Methods for moving vehicles / adding grids  *
+     ************************************************ */
 
     // adds vehicle to grid and array of all vehicles
     public void addVehicle(boolean direction, int length, int x, int y) {
@@ -118,6 +154,7 @@ public class Grid {
         }
     }
 
+    // generates all the possible children grids (i.e. moves) based on the current grid
     public ArrayList<Grid> generateAllChildren() {
         ArrayList<Grid> array_list = new ArrayList<>();
 
@@ -181,63 +218,51 @@ public class Grid {
         return array_list;
     }
 
-    public Grid getParent() {
-        return parent_grid;
-    }
 
-    public int getPathSize() {
-        return path_size;
-    }
-
-    public int getPathEstimate() {
-        return path_estimate;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-
+     /* ******************************
+     * 3. Methods for the heuristics *
+     ******************************* */
 
     /* This heuristic calculates the amount of steps needed
      * to move the red car to it's goal position (blocking cars not taken into account). */
-    public void distanceToGoalPosition_heuristic(int x1, int weight) {
-        score += (size - x1) * weight;
+    public int distanceToGoalPosition_heuristic(int x1, int weight) {
+        return (size - x1 - 2) * weight;
     }
 
     /* This heuristic calculates how many cars are blocking the red car,
      * [if they are double blocked itself, an extra point is counted]. */
-    public void blockingCars_heuristic(int x1, int goal_y) {
+    public int blockingCars_heuristic(int x1, int goal_y, int weight, int indirectWeight) {
+        int blockingCarsScore = 0;
         for (int x = x1 + 2; x < size; x++) {
             if (grid[x][goal_y] != null) {
-                score += 20;    // 20 for puzzle 6
+                blockingCarsScore += weight;
 
-                /*
-                int number = grid[x][goal_y].getNumber();
-                int y1 = goal_y;
-                while (y1 > 0 && grid[x][y1] != null && grid[x][y1].getNumber() == number) {
-                    y1--;
-                }
-                if (grid[x][y1] != null) {
-                    int y2 = goal_y;
-                    while (y2 < size - 1 && grid[x][y2] != null && grid[x][y2].getNumber() == number) {
-                        y2++;
+                if(indirectWeight > 0) {
+                    int number = grid[x][goal_y].getNumber();
+                    int y1 = goal_y;
+                    while (y1 > 0 && grid[x][y1] != null && grid[x][y1].getNumber() == number) {
+                        y1--;
                     }
-                    if (grid[x][y2] != null) {
-                        score += 20;
+                    if (grid[x][y1] != null) {
+                        int y2 = goal_y;
+                        while (y2 < size - 1 && grid[x][y2] != null && grid[x][y2].getNumber() == number) {
+                            y2++;
+                        }
+                        if (grid[x][y2] != null) {
+                            blockingCarsScore += indirectWeight;
+                        }
                     }
                 }
-                */
-
             }
         }
+        return blockingCarsScore;
     }
 
     /* This heuristic checks if there is a clear path from the red car to the goal position,
      * i.e. there are no cars between the red car and the goal position. If this is true,
      * a big minimum score is given (so the path will be clear), and the distance from red car
      * to goal is given points, so it will move the red car towards the goal. */
-    public void clearPath_heuristic(int x1, int goal_y, int negativeWeight, int positiveWeight) {
+    public int clearPath_heuristic(int x1, int goal_y, int negativeWeight, int positiveWeight) {
         boolean pathIsClear = true;
         for(int x = x1+2; x < size; x++) {
             if(grid[x][goal_y] != null) {
@@ -245,14 +270,14 @@ public class Grid {
             }
         }
         if(pathIsClear) {
-            score -= negativeWeight;
-            score += (size - x1) * positiveWeight;
+            return (negativeWeight + (size - x1) * positiveWeight);
         }
+        return 0;
     }
 
     /* This heuristic looks at the area around the red car and adds points for every field
      * that is non-empty (so the more crowded the surrounding area, the more points). */
-    public void surroundingCars_heuristic(int x1, int goal_y, int weight) {
+    public int surroundingCars_heuristic(int x1, int goal_y, int weight) {
         // calculate how far ahead (in the x direction) it must look for surrounding cars
         int maximumX;
         if (size - x1 > 5) {
@@ -266,19 +291,21 @@ public class Grid {
         }
 
         // calculate the amount of non-empty fields in the area
+        int surroundingCarsScore = 0;
         for (int y = goal_y - 2; y < goal_y + 3; y++) {
             for (int x = x1; x <= maximumX; x++) {
                 if (grid[x][y] != null) {
-                    score += weight;
+                    surroundingCarsScore += weight;
                 }
             }
         }
+        return surroundingCarsScore;
     }
 
     /* This heuristic calculates the total move freedom of all cars combined,
      * (i.e. the total possible moves from all cars added up). This will be substracted
      * from a constant, so the bigger the move freedom, the lower the points. */
-    public void moveFreedom_heuristic(int weight) {
+    public int moveFreedom_heuristic(int weight) {
         int moveFreedom = 0;
 
         for (int y = 0; y < size; y++) {
@@ -304,13 +331,15 @@ public class Grid {
                 }
             }
         }
-        score += (30-moveFreedom)*weight;
+
+        return (30 - moveFreedom) * weight;
     }
 
     /* This heuristic looks at how the cars are divided on the grid. It divides the grid into
      * four quadrants and looks at how each quadrant is filled with cars. If the cars are too
      * skewed, it gives points, so it will have the tendency to get a more equal distribution. */
-    public void quadrantDistribution_heuristic(int weight) {
+    public int quadrantDistribution_heuristic(int weight, int boundary) {
+        int quadrantDistributionScore = 0;
         int coordinate = size/2;
         int endCoordinate = size-1;
 
@@ -319,18 +348,19 @@ public class Grid {
         int thirdQuadrant = calculateFreeSpace(0, coordinate, coordinate, endCoordinate);
         int fourthQuadrant = calculateFreeSpace(coordinate, coordinate, endCoordinate, endCoordinate);
 
-        if(secondQuadrant != 0 && firstQuadrant % secondQuadrant > 3) {
-            score += weight;
+        if(secondQuadrant != 0 && firstQuadrant % secondQuadrant > boundary) {
+            quadrantDistributionScore += weight;
         }
-        if(thirdQuadrant != 0 && firstQuadrant % thirdQuadrant > 3) {
-            score += weight;
+        if(thirdQuadrant != 0 && firstQuadrant % thirdQuadrant > boundary) {
+            quadrantDistributionScore += weight;
         }
-        if(secondQuadrant != 0 && fourthQuadrant % secondQuadrant > 3) {
-            score += weight;
+        if(secondQuadrant != 0 && fourthQuadrant % secondQuadrant > boundary) {
+            quadrantDistributionScore += weight;
         }
-        if(thirdQuadrant != 0 && fourthQuadrant % thirdQuadrant > 3) {
-            score += weight;
+        if(thirdQuadrant != 0 && fourthQuadrant % thirdQuadrant > boundary) {
+            quadrantDistributionScore += weight;
         }
+        return quadrantDistributionScore;
     }
 
     public int calculateFreeSpace(int startX, int startY, int endX, int endY) {
@@ -347,230 +377,75 @@ public class Grid {
         return freeSpace;
     }
 
-    public void blockingCarBehind_heuristic(int x1, int goal_y, int weight) {
+    public int blockingCarBehind_heuristic(int x1, int goal_y, int weight) {
         if(x1 > 0 && grid[x1 - 1][goal_y] != null) {
-            score += weight;
+            return weight;
         }
+        return 0;
     }
 
+
+    /* ******************************************************
+     * 4. Methods for calculating the score / path estimate *
+     ****************************************************** */
 
     // calculates an inadmissible score based on several (inadmissible) heuristics
     // the lower the score, the better the board, the earlier it appears in the PQ
     public void calculateScore() {
-        /* Heuristic 1 & 2 necessary for puzzle 6 (20 & 20 malus points)
-         */
+        getRedCarPosition();
 
-        // before applying heuristics, get the current position of the red car
+        // distanceToGoalPosition: takes the x position of the red car and the score weight
+        score += distanceToGoalPosition_heuristic(red_x, 20);
 
-        // first get row (y-pos) of red car based on board size
-        int goal_y;
-        if (size % 2 == 0) {
-            goal_y = size / 2 - 1;
-        } else {
-            goal_y = size / 2;
-        }
-
-        // then find the x-position of the red car
-        int x1 = 0;
-        while (grid[x1][goal_y] == null || grid[x1][goal_y].getNumber() != 1) {
-            x1++;
-        }
-
-        // distanceToGoalPosition heuristic
-        // takes the x position of the red car and the score weight
-        distanceToGoalPosition_heuristic(x1, 20);
-
-        // blockingCars heuristic
-        // takes the x and y position of the red car and the score weight
-        blockingCars_heuristic(x1, goal_y);
+        // blockingCars: takes the x and y position of the red car and the score weight
+        // (the direct (first) and indirect (second) blocking cars score)
+        score += blockingCars_heuristic(red_x, red_y, 20, 20);
 
         // clearPath: takes the x and y position of the red car and the score weight
-        clearPath_heuristic(x1, goal_y, -400, 40);
+        score += clearPath_heuristic(red_x, red_y, -400, 40);
 
-        // quadrantDistribution: takes the score weight
-        quadrantDistribution_heuristic(30);
+        // quadrantDistribution: takes the score weight and the boundary
+        score += quadrantDistribution_heuristic(30, 3);
 
         // surroundingCars: takes the x and y position of the red car and the score weight
-        surroundingCars_heuristic(x1, goal_y, 16);
+        score += surroundingCars_heuristic(red_x, red_y, 16);
 
         // moveFreedom: takes the score weight
-        moveFreedom_heuristic(8);
+        score += moveFreedom_heuristic(8);
 
         // blockingCarBehind: takes the x and y position of the red car and the score weight
-        blockingCarBehind_heuristic(x1, goal_y, 200);
+        score += blockingCarBehind_heuristic(red_x, red_y, 200);
 
     }
 
     public void calculatePathEstimate() {
-        // get row (y-pos) of red car based on board size
-        int goal_y;
+        getRedCarPosition();
+
+        // distanceToGoalPosition: takes the x position of the red car and the score weight (1)
+        path_estimate = distanceToGoalPosition_heuristic(red_x, 1);
+
+        // blockingCars: takes the x and y position of the red car and the score weight
+        // (1 for the direct (first) and 1 for the indirect (second) blocking cars)
+        path_estimate = blockingCars_heuristic(red_x, red_y, 1, 1);
+
+    }
+
+    // finds the x and y position of the red car (used for the heuristics)
+    public void getRedCarPosition() {
         if (size % 2 == 0) {
-            goal_y = size / 2 - 1;
+            red_y = size / 2 - 1;
         } else {
-            goal_y = size / 2;
+            red_y = size / 2;
         }
 
-        // find the x-position of the red car
-        int x = 0;
-        while (grid[x][goal_y] == null || grid[x][goal_y].getNumber() != 1) {
-            x++;
-        }
-
-        // distance from red car to goal position
-        path_estimate = size - x - 2;
-
-        // (minimum) amount of blocking cars
-        for (int i = x + 2; i < size; i++) {
-            if (grid[i][goal_y] != null) {
-                path_estimate += 1;
-
-                int number = grid[i][goal_y].getNumber();
-                int y1 = goal_y;
-                while (y1 > 0 && grid[x][y1] != null && grid[x][y1].getNumber() == number) {
-                    y1--;
-                }
-                if (grid[x][y1] != null) {
-                    int y2 = goal_y;
-                    while (y2 < size - 1 && grid[x][y2] != null && grid[x][y2].getNumber() == number) {
-                        y2++;
-                    }
-                    if (grid[x][y2] != null) {
-                        path_estimate += 1;
-                    }
-                }
-            }
+        while (grid[red_x][red_y] == null || grid[red_x][red_y].getNumber() != 1) {
+            red_x++;
         }
     }
 
-    // calculates how many cars are blocking the red car (using recursion)
-    public int blockingCarsCalculator(int x, int y, int currentAmount, HashSet<Integer> carNumbers) {
-        int amountOfBlockingCars = currentAmount;
-        int number = grid[x][y].getNumber();
-        boolean direction = grid[x][y].getDirection();
-
-        //System.out.println("carNumbers: " + carNumbers);
-        //System.out.println("currentAmount: " + currentAmount);
-
-        // set all booleans to false
-        boolean leftIsBlocked = false;
-        boolean rightIsBlocked = false;
-        boolean topIsBlocked = false;
-        boolean bottomIsBlocked = false;
-
-        // if the number is 1, the red car is blocking some (sequence of) cars that are (/is) blocking the red car
-        // so we HAVE to move the red car to the left, so check the blocking cars on the left
-        if(number == 1) {
-
-            // find out if there is a car at the left
-            int x3 = x;
-            while (x3 > 0 && grid[x3][y] != null && grid[x3][y].getNumber() == number) {
-                x3--;
-            }
-            if (grid[x3][y] == null) {
-                leftIsBlocked = false;
-            } else {
-                leftIsBlocked = true;
-                //System.out.println("x: " + x3 + ". y: " + y);
-                //System.out.println("number: " + number);
-                //System.out.println("amountOfBlockingCars: " + amountOfBlockingCars);
-                if(grid[x3][y].getNumber() != 1) {
-                    amountOfBlockingCars += blockingCarsCalculator(x3, y, 0, carNumbers);
-                }
-            }
-        }
-
-
-        // if this car is not used to calculate blocking cars yet, add it to the HashSet and proceed
-        // this is to prevent infinite loops
-        if (!carNumbers.contains(number)) {
-            carNumbers.add(number);
-
-            // input car is horizontal
-            if (direction) {
-                // find out if there is a car at the left
-                int x1 = x;
-                while (x1 > 0 && grid[x1][y] != null && grid[x1][y].getNumber() == number) {
-                    x1--;
-                }
-                if (grid[x1][y] == null) {
-                    leftIsBlocked = false;
-                } else {
-                    leftIsBlocked = true;
-                    //amountOfBlockingCars += blockingCarsCalculator(x1, y, 0, carNumbers);
-                }
-
-
-                // find out if there is a car at the right
-                int x2 = x;
-                while (x2 < size - 1 && grid[x2][y] != null && grid[x2][y].getNumber() == number) {
-                    x2++;
-                }
-                if (grid[x2][y] == null) {
-                    rightIsBlocked = false;
-                } else {
-                    rightIsBlocked = true;
-                    //amountOfBlockingCars += blockingCarsCalculator(x2, y, 0, carNumbers);
-                }
-
-                // if left and right are blocked, increment the amount of blocking cars by 1,
-                // if it is not the car itself, use recursion to find more blocking cars
-                if (leftIsBlocked && rightIsBlocked) {
-                    amountOfBlockingCars++;
-
-                    if (grid[x1][y].getNumber() != number) {
-                        amountOfBlockingCars += blockingCarsCalculator(x1, y, 0, carNumbers);
-                    }
-                    if (grid[x2][y].getNumber() != number) {
-                        amountOfBlockingCars += blockingCarsCalculator(x2, y, 0, carNumbers);
-                    }
-                }
-            }
-
-            if (!direction) {
-                // find out if there is a car at the top
-                int y1 = y;
-                while (y1 > 0 && grid[x][y1] != null && grid[x][y1].getNumber() == number) {
-                    y1--;
-                }
-                if (grid[x][y1] == null) {
-                    topIsBlocked = false;
-                } else {
-                    topIsBlocked = true;
-                    //amountOfBlockingCars += blockingCarsCalculator(x, y1, 0, carNumbers);
-                }
-
-                // find out if there is a car at the bottom
-                int y2 = y;
-                while (y2 < size - 1 && grid[x][y2] != null && grid[x][y2].getNumber() == number) {
-                    y2++;
-                }
-                if (grid[x][y2] == null) {
-                    bottomIsBlocked = false;
-                } else {
-                    bottomIsBlocked = true;
-                    //amountOfBlockingCars += blockingCarsCalculator(x, y2, 0, carNumbers);
-                }
-
-                if (topIsBlocked && bottomIsBlocked) {
-                    amountOfBlockingCars++;
-
-                    if (grid[x][y1].getNumber() != number) {
-                        amountOfBlockingCars += blockingCarsCalculator(x, y1, 0, carNumbers);
-                    }
-                    if (grid[x][y2].getNumber() != number) {
-                        amountOfBlockingCars += blockingCarsCalculator(x, y2, 0, carNumbers);
-                    }
-                }
-            }
-        }
-
-        // if two sides of a car are blocked, it will take AT LEAST one move (extra) to move the current car
-        //if((leftIsBlocked && rightIsBlocked) || (topIsBlocked && bottomIsBlocked)) {
-        //    amountOfBlockingCars++;
-        //}
-
-        return amountOfBlockingCars;
-    }
+    /* ************************************************
+     * 5. Methods for the path / grid (visualisation) *
+     ************************************************ */
 
     public ArrayList<Grid> getPath() {
         ArrayList<Grid> path = new ArrayList<>();
@@ -604,6 +479,10 @@ public class Grid {
         }
     }
 
+     /* ****************************
+     * 6. Methods for the hash set *
+     ***************************** */
+
     public int hashCode() {
         int key = 0;
 
@@ -635,7 +514,5 @@ public class Grid {
             }
         }
         return true;
-
-        //return Arrays.deepEquals(this.getGrid(), child_grid.getGrid());
     }
 }
