@@ -118,6 +118,7 @@ public class Grid {
         grid[x][y - 1] = grid[x][y];
     }
 
+    // checks if moveRight is possible
     public boolean moveRightIsPossible(int x, int y) {
         boolean direction = grid[x][y].getDirection();
         int length = grid[x][y].getLength();
@@ -125,12 +126,14 @@ public class Grid {
         return direction && x + length < size && grid[x + length][y] == null;
     }
 
+    // checks if moveLeft is possible
     public boolean moveLeftIsPossible(int x, int y) {
         boolean direction = grid[x][y].getDirection();
 
         return direction && x > 0 && grid[x - 1][y] == null;
     }
 
+    // checks if moveDown is possible
     public boolean moveDownIsPossible(int x, int y) {
         boolean direction = grid[x][y].getDirection();
         int length = grid[x][y].getLength();
@@ -138,6 +141,7 @@ public class Grid {
         return !direction && y + length < size && grid[x][y + length] == null;
     }
 
+    // checks if moveUp is possible
     public boolean moveUpIsPossible(int x, int y) {
         boolean direction = grid[x][y].getDirection();
 
@@ -147,9 +151,11 @@ public class Grid {
     // check whether the red car is in front of the exit (goal position)
     public boolean goalReached() {
         if (size % 2 == 0) {
-            return grid[size - 1][size / 2 - 1] != null && grid[size - 1][size / 2 - 1].getNumber() == 1;
+            return (grid[size - 1][size / 2 - 1] != null &&
+                    grid[size - 1][size / 2 - 1].getNumber() == 1);
         } else {
-            return grid[size - 1][size / 2] != null && grid[size - 1][size / 2].getNumber() == 1;
+            return (grid[size - 1][size / 2] != null &&
+                    grid[size - 1][size / 2].getNumber() == 1);
         }
     }
 
@@ -218,8 +224,8 @@ public class Grid {
      * 3. Methods for calculating the score / path estimate *
      ****************************************************** */
 
-    // calculates an inadmissible score based on several (inadmissible) heuristics
-    // the lower the score, the better the board, the earlier it appears in the PQ
+    /* calculates an inadmissible score based on several (inadmissible) heuristics
+     * the lower the score, the better */
     public void calculateInadmissableScore() {
         getRedCarPosition();
 
@@ -249,6 +255,7 @@ public class Grid {
         //score += blockingCarBehind_heuristic(red_x, red_y, 200);
     }
 
+    // calculates score for A* algorithm
     public void calculateAStarScore() {
         getRedCarPosition();
 
@@ -447,6 +454,7 @@ public class Grid {
      * 5. Methods for the path / grid (visualisation) *
      ************************************************ */
 
+    // returns path of current grid
     public ArrayList<Grid> getPath() {
         ArrayList<Grid> path = new ArrayList<>();
         path.add(this);
@@ -484,6 +492,7 @@ public class Grid {
      * 6. Methods for the hash set *
      ***************************** */
 
+    // calculates key for hashing
     public int hashCode() {
         int key = 0;
 
@@ -504,6 +513,7 @@ public class Grid {
         return key;
     }
 
+    // compares grids by running through the Vehicle matrix
     public boolean equals(Object o) {
         Grid child_grid = (Grid) o;
 

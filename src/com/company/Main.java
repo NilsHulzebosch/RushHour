@@ -16,13 +16,13 @@ public class Main {
         ArrayList<Grid> path;
         long start = System.currentTimeMillis();
         switch (puzzleNumber) {
-            case 1: path = solveBreadthFirst(firstPuzzle()); break;
-            case 2: path = solveBreadthFirst(secondPuzzle()); break;
-            case 3: path = solveBreadthFirst(thirdPuzzle()); break;
-            case 4: path = solveBreadthFirst(fourthPuzzle()); break;
-            case 5: path = solveBreadthFirst(fifthPuzzle()); break;
-            case 6: path = solveBreadthFirst(sixthPuzzle()); break;
-            case 7: path = solveBreadthFirst(seventhPuzzle()); break;
+            case 1: path = solvePuzzle(firstPuzzle()); break;
+            case 2: path = solvePuzzle(secondPuzzle()); break;
+            case 3: path = solvePuzzle(thirdPuzzle()); break;
+            case 4: path = solvePuzzle(fourthPuzzle()); break;
+            case 5: path = solvePuzzle(fifthPuzzle()); break;
+            case 6: path = solvePuzzle(sixthPuzzle()); break;
+            case 7: path = solvePuzzle(seventhPuzzle()); break;
             default: throw new Error("Number must be between 1-7");
         }
         long end = System.currentTimeMillis();
@@ -32,7 +32,8 @@ public class Main {
         new Visualization(path);
     }
 
-    private static ArrayList<Grid> solveBreadthFirst(Grid grid) {
+    // solves puzzle
+    private static ArrayList<Grid> solvePuzzle(Grid grid) {
         System.out.println("Puzzle is being solved...");
 
         Comparator<Grid> comparator = new PathSizeComparator();
@@ -65,7 +66,7 @@ public class Main {
         return null;
     }
 
-    // adds the first 6x6 board configuration from our assignment
+    // adds the first 6x6 board configuration from the assignment
     private static Grid firstPuzzle() {
         Grid grid = new Grid(6);
 
@@ -82,7 +83,7 @@ public class Main {
         return grid;
     }
 
-    // adds the second 6x6 board configuration from our assignment
+    // adds the second 6x6 board configuration from the assignment
     private static Grid secondPuzzle() {
         Grid grid = new Grid(6);
 
@@ -103,7 +104,7 @@ public class Main {
         return grid;
     }
 
-    // adds the third 6x6 board configuration from our assignment
+    // adds the third 6x6 board configuration from the assignment
     private static Grid thirdPuzzle() {
         Grid grid = new Grid(6);
 
@@ -124,7 +125,7 @@ public class Main {
         return grid;
     }
 
-    // adds the first 9x9 board configuration from our assignment
+    // adds the first 9x9 board configuration from the assignment
     private static Grid fourthPuzzle() {
         Grid grid = new Grid(9);
 
@@ -154,7 +155,7 @@ public class Main {
         return grid;
     }
 
-    // adds the second 9x9 board configuration from our assignment
+    // adds the second 9x9 board configuration from the assignment
     private static Grid fifthPuzzle() {
         Grid grid = new Grid(9);
 
@@ -186,7 +187,7 @@ public class Main {
         return grid;
     }
 
-    // adds the third 9x9 board configuration from our assignment
+    // adds the third 9x9 board configuration from the assignment
     private static Grid sixthPuzzle() {
         Grid grid = new Grid(9);
 
@@ -220,7 +221,7 @@ public class Main {
         return grid;
     }
 
-    // adds the 12x12 board configuration from our assignment
+    // adds the 12x12 board configuration from the assignment
     private static Grid seventhPuzzle() {
         Grid grid = new Grid(12);
 
