@@ -22,7 +22,6 @@ public class Grid {
     private Grid parent_grid;
 
     private int path_size = 0;
-    private int path_estimate = 0;
     private int score = 0;
 
     private int red_x;
@@ -62,10 +61,6 @@ public class Grid {
 
     public int getPathSize() {
         return path_size;
-    }
-
-    public int getPathEstimate() {
-        return path_estimate;
     }
 
     public int getScore() {
@@ -160,7 +155,7 @@ public class Grid {
 
     // generates all the possible children grids (i.e. moves) based on the current grid
     public ArrayList<Grid> generateAllChildren() {
-        ArrayList<Grid> array_list = new ArrayList<>();
+        ArrayList<Grid> children_list = new ArrayList<>();
 
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
@@ -175,57 +170,47 @@ public class Grid {
                         if (moveRightIsPossible(x, y) && moveLeftIsPossible(x, y)) {
                             Grid new_grid = new Grid(this);
                             new_grid.moveRight(x, y);
-                            new_grid.calculatePathEstimate();
-                            //new_grid.calculateScore();
-                            array_list.add(new_grid);
+                            children_list.add(new_grid);
 
                             Grid new_grid2 = new Grid(this);
                             new_grid2.moveLeft(x, y);
-                            new_grid2.calculatePathEstimate();
-                            //new_grid2.calculateScore();
-                            array_list.add(new_grid2);
+                            children_list.add(new_grid2);
                         } else if (moveRightIsPossible(x, y)) {
                             Grid new_grid = new Grid(this);
                             new_grid.moveRight(x, y);
-                            new_grid.calculatePathEstimate();
-                            //new_grid.calculateScore();
-                            array_list.add(new_grid);
+                            children_list.add(new_grid);
                         } else if (moveLeftIsPossible(x, y)) {
                             Grid new_grid = new Grid(this);
                             new_grid.moveLeft(x, y);
-                            new_grid.calculatePathEstimate();
-                            //new_grid.calculateScore();
-                            array_list.add(new_grid);
+                            children_list.add(new_grid);
                         } else if (moveDownIsPossible(x, y) && moveUpIsPossible(x, y)) {
                             Grid new_grid = new Grid(this);
                             new_grid.moveDown(x, y);
-                            new_grid.calculatePathEstimate();
-                            //new_grid.calculateScore();
-                            array_list.add(new_grid);
+                            children_list.add(new_grid);
 
                             Grid new_grid2 = new Grid(this);
                             new_grid2.moveUp(x, y);
-                            new_grid2.calculatePathEstimate();
-                            //new_grid2.calculateScore();
-                            array_list.add(new_grid2);
+                            children_list.add(new_grid2);
                         } else if (moveDownIsPossible(x, y)) {
                             Grid new_grid = new Grid(this);
                             new_grid.moveDown(x, y);
-                            new_grid.calculatePathEstimate();
-                            //new_grid.calculateScore();
-                            array_list.add(new_grid);
+                            children_list.add(new_grid);
                         } else if (moveUpIsPossible(x, y)) {
                             Grid new_grid = new Grid(this);
                             new_grid.moveUp(x, y);
-                            new_grid.calculatePathEstimate();
-                            //new_grid.calculateScore();
-                            array_list.add(new_grid);
+                            children_list.add(new_grid);
                         }
                     }
                 }
             }
         }
-        return array_list;
+
+        for (Grid child : children_list) {
+            child.calculatePathEstimate();
+            //child.calculateScore();
+        }
+
+        return children_list;
     }
 
 
@@ -237,6 +222,9 @@ public class Grid {
     // the lower the score, the better the board, the earlier it appears in the PQ
     public void calculateScore() {
         getRedCarPosition();
+
+        // add current path size to score
+        //score += path_size * 25;
 
         // distanceToGoalPosition: takes the x position of the red car and the score weight
         score += distanceToGoalPosition_heuristic(red_x, 20);
@@ -264,13 +252,14 @@ public class Grid {
     public void calculatePathEstimate() {
         getRedCarPosition();
 
+        score = path_size;
+
         // distanceToGoalPosition: takes the x position of the red car and the score weight (1)
-        path_estimate = distanceToGoalPosition_heuristic(red_x, 1);
+        score += distanceToGoalPosition_heuristic(red_x, 1);
 
         // blockingCars: takes the x and y position of the red car and the score weight
         // (1 for the direct (first) and 1 for the indirect (second) blocking cars)
-        path_estimate = blockingCars_heuristic(red_x, red_y, 1, 1);
-
+        score += blockingCars_heuristic(red_x, red_y, 1, 1);
     }
 
     // finds the x and y position of the red car (used for the heuristics)
