@@ -3,9 +3,9 @@ import java.util.ArrayList;
 
 /* Table of Contents
  * 1. Private instance variables / constructors / get
- * 2.  Methods for adding/moving vehicles & making child grids
- * 3. Methods for the heuristics
- * 4. Methods for calculating score / path estimate
+ * 2. Methods for adding/moving vehicles & making child grids
+ * 3. Methods for calculating score / path estimate
+ * 4. Methods for the heuristics
  * 5. Methods for the path / grid (visualisation)
  * 6. Methods for the hash set
  */
@@ -52,7 +52,7 @@ public class Grid {
         return grid;
     }
 
-    public int getSize() {
+    public int getGridSize() {
         return size;
     }
 
@@ -176,43 +176,43 @@ public class Grid {
                         Grid new_grid2 = new Grid(this);
                         if (moveRightIsPossible(x, y) && moveLeftIsPossible(x, y)) {
                             new_grid.moveRight(x, y);
-                            //new_grid.calculatePathEstimate();
-                            new_grid.calculateScore();
+                            new_grid.calculatePathEstimate();
+                            //new_grid.calculateScore();
                             array_list.add(new_grid);
 
                             new_grid2.moveLeft(x, y);
-                            //new_grid2.calculatePathEstimate();
-                            new_grid2.calculateScore();
+                            new_grid2.calculatePathEstimate();
+                            //new_grid2.calculateScore();
                             array_list.add(new_grid2);
                         } else if (moveRightIsPossible(x, y)) {
                             new_grid.moveRight(x, y);
-                            //new_grid.calculatePathEstimate();
-                            new_grid.calculateScore();
+                            new_grid.calculatePathEstimate();
+                            //new_grid.calculateScore();
                             array_list.add(new_grid);
                         } else if (moveLeftIsPossible(x, y)) {
                             new_grid.moveLeft(x, y);
-                            //new_grid.calculatePathEstimate();
-                            new_grid.calculateScore();
+                            new_grid.calculatePathEstimate();
+                            //new_grid.calculateScore();
                             array_list.add(new_grid);
                         } else if (moveDownIsPossible(x, y) && moveUpIsPossible(x, y)) {
                             new_grid.moveDown(x, y);
-                            //new_grid.calculatePathEstimate();
-                            new_grid.calculateScore();
+                            new_grid.calculatePathEstimate();
+                            //new_grid.calculateScore();
                             array_list.add(new_grid);
 
                             new_grid2.moveUp(x, y);
-                            //new_grid2.calculatePathEstimate();
-                            new_grid2.calculateScore();
+                            new_grid2.calculatePathEstimate();
+                            //new_grid2.calculateScore();
                             array_list.add(new_grid2);
                         } else if (moveDownIsPossible(x, y)) {
                             new_grid.moveDown(x, y);
-                            //new_grid.calculatePathEstimate();
-                            new_grid.calculateScore();
+                            new_grid.calculatePathEstimate();
+                            //new_grid.calculateScore();
                             array_list.add(new_grid);
                         } else if (moveUpIsPossible(x, y)) {
                             new_grid.moveUp(x, y);
-                            //new_grid.calculatePathEstimate();
-                            new_grid.calculateScore();
+                            new_grid.calculatePathEstimate();
+                            //new_grid.calculateScore();
                             array_list.add(new_grid);
                         }
                     }
@@ -222,8 +222,68 @@ public class Grid {
         return array_list;
     }
 
+
+    /* ******************************************************
+     * 3. Methods for calculating the score / path estimate *
+     ****************************************************** */
+
+    // calculates an inadmissible score based on several (inadmissible) heuristics
+    // the lower the score, the better the board, the earlier it appears in the PQ
+    public void calculateScore() {
+        getRedCarPosition();
+
+        // distanceToGoalPosition: takes the x position of the red car and the score weight
+        score += distanceToGoalPosition_heuristic(red_x, 20);
+
+        // blockingCars: takes the x and y position of the red car and the score weight
+        // (the direct (first) and indirect (second) blocking cars score)
+        score += blockingCars_heuristic(red_x, red_y, 20, 20);
+
+        // clearPath: takes the x and y position of the red car and the score weight
+        score += clearPath_heuristic(red_x, red_y, -400, 40);
+
+        // quadrantDistribution: takes the score weight and the boundary
+        //score += quadrantDistribution_heuristic(30, 3);
+
+        // surroundingCars: takes the x and y position of the red car and the score weight
+        score += surroundingCars_heuristic(red_x, red_y, 16);
+
+        // moveFreedom: takes the score weight
+        //score += moveFreedom_heuristic(8);
+
+        // blockingCarBehind: takes the x and y position of the red car and the score weight
+        //score += blockingCarBehind_heuristic(red_x, red_y, 200);
+
+    }
+
+    public void calculatePathEstimate() {
+        getRedCarPosition();
+
+        // distanceToGoalPosition: takes the x position of the red car and the score weight (1)
+        path_estimate = distanceToGoalPosition_heuristic(red_x, 1);
+
+        // blockingCars: takes the x and y position of the red car and the score weight
+        // (1 for the direct (first) and 1 for the indirect (second) blocking cars)
+        path_estimate = blockingCars_heuristic(red_x, red_y, 1, 1);
+
+    }
+
+    // finds the x and y position of the red car (used for the heuristics)
+    public void getRedCarPosition() {
+        if (size % 2 == 0) {
+            red_y = size / 2 - 1;
+        } else {
+            red_y = size / 2;
+        }
+
+        while (grid[red_x][red_y] == null || grid[red_x][red_y].getNumber() != 1) {
+            red_x++;
+        }
+    }
+
+
      /* ******************************
-     * 3. Methods for the heuristics *
+     * 4. Methods for the heuristics *
      ******************************* */
 
     /* This heuristic calculates the amount of steps needed
@@ -388,64 +448,6 @@ public class Grid {
     }
 
 
-    /* ******************************************************
-     * 4. Methods for calculating the score / path estimate *
-     ****************************************************** */
-
-    // calculates an inadmissible score based on several (inadmissible) heuristics
-    // the lower the score, the better the board, the earlier it appears in the PQ
-    public void calculateScore() {
-        getRedCarPosition();
-
-        // distanceToGoalPosition: takes the x position of the red car and the score weight
-        score += distanceToGoalPosition_heuristic(red_x, 20);
-
-        // blockingCars: takes the x and y position of the red car and the score weight
-        // (the direct (first) and indirect (second) blocking cars score)
-        score += blockingCars_heuristic(red_x, red_y, 20, 20);
-
-        // clearPath: takes the x and y position of the red car and the score weight
-        score += clearPath_heuristic(red_x, red_y, -400, 40);
-
-        // quadrantDistribution: takes the score weight and the boundary
-        //score += quadrantDistribution_heuristic(30, 3);
-
-        // surroundingCars: takes the x and y position of the red car and the score weight
-        score += surroundingCars_heuristic(red_x, red_y, 16);
-
-        // moveFreedom: takes the score weight
-        //score += moveFreedom_heuristic(8);
-
-        // blockingCarBehind: takes the x and y position of the red car and the score weight
-        //score += blockingCarBehind_heuristic(red_x, red_y, 200);
-
-    }
-
-    public void calculatePathEstimate() {
-        getRedCarPosition();
-
-        // distanceToGoalPosition: takes the x position of the red car and the score weight (1)
-        path_estimate = distanceToGoalPosition_heuristic(red_x, 1);
-
-        // blockingCars: takes the x and y position of the red car and the score weight
-        // (1 for the direct (first) and 1 for the indirect (second) blocking cars)
-        path_estimate = blockingCars_heuristic(red_x, red_y, 1, 1);
-
-    }
-
-    // finds the x and y position of the red car (used for the heuristics)
-    public void getRedCarPosition() {
-        if (size % 2 == 0) {
-            red_y = size / 2 - 1;
-        } else {
-            red_y = size / 2;
-        }
-
-        while (grid[red_x][red_y] == null || grid[red_x][red_y].getNumber() != 1) {
-            red_x++;
-        }
-    }
-
     /* ************************************************
      * 5. Methods for the path / grid (visualisation) *
      ************************************************ */
@@ -481,6 +483,7 @@ public class Grid {
             System.out.println();
         }
     }
+
 
      /* ****************************
      * 6. Methods for the hash set *

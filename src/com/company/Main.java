@@ -11,25 +11,25 @@ public class Main {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         System.out.print("Type in the number of the puzzle you want to solve: ");
+
+        ArrayList<Grid> path;
         int puzzleNumber = in.nextInt();
-        if (puzzleNumber == 1) {
-            solveBreadthFirst(firstPuzzle());
-        }
-
         long start = System.currentTimeMillis();
-        ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(secondPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(thirdPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(seventhPuzzle());
+        switch (puzzleNumber) {
+            case 1: path = solveBreadthFirst(firstPuzzle()); break;
+            case 2: path = solveBreadthFirst(secondPuzzle()); break;
+            case 3: path = solveBreadthFirst(thirdPuzzle()); break;
+            case 4: path = solveBreadthFirst(fourthPuzzle()); break;
+            case 5: path = solveBreadthFirst(fifthPuzzle()); break;
+            case 6: path = solveBreadthFirst(sixthPuzzle()); break;
+            case 7: path = solveBreadthFirst(seventhPuzzle()); break;
+            default: throw new Error("Number must be between 1-7");
+        }
         long end = System.currentTimeMillis();
-
-        //path.get(0).printGrid();
         printPath(path);
-        new Visualization(path.get(0));
-        System.out.println("Time = " + (end - start));
+        System.out.println("Time = " + (end - start) + "ms");
+        System.out.println("Moves = " + path.get(0).getPathSize());
+        new Visualization(path);
     }
 
     private static ArrayList<Grid> solveBreadthFirst(Grid grid) {
@@ -41,7 +41,6 @@ public class Main {
         queue.add(grid);
         hash_set.add(grid);
 
-        int amountOfGrids = 1;
         boolean goalReached = false;
         while(!goalReached) {
 
@@ -50,7 +49,6 @@ public class Main {
 
             ArrayList<Grid> new_children = first_grid.generateAllChildren();
             for (Grid child : new_children) {
-                amountOfGrids++;
 
                 if (!hash_set.contains(child)) {
                     queue.add(child);
@@ -63,13 +61,6 @@ public class Main {
             }
         }
         return null;
-    }
-
-    private static void printPath(ArrayList<Grid> path) {
-        for (int i = path.size() - 1; i >= 0; i--) {
-            path.get(i).printGrid();
-        }
-        System.out.println(path.get(0).getPathSize());
     }
 
     // adds the first 6x6 board configuration from our assignment
@@ -279,4 +270,10 @@ public class Main {
         return grid;
     }
 
+    private static void printPath(ArrayList<Grid> path) {
+        for (int i = path.size() - 1; i >= 0; i--) {
+            System.out.println();
+            path.get(i).printGrid();
+        }
+    }
 }
