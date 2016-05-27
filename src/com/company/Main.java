@@ -1,80 +1,63 @@
 package com.company;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.HashSet;
+import java.util.Comparator;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Type in the number of the puzzle you want to solve: ");
+        int puzzleNumber = in.nextInt();
+        if (puzzleNumber == 1) {
+            solveBreadthFirst(firstPuzzle());
+        }
+
         long start = System.currentTimeMillis();
         //ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(secondPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(thirdPuzzle());
-        ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
-        //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());        // kan wss in 51 moves (met de hand gedaan)
+        //ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
+        //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(seventhPuzzle());
         long end = System.currentTimeMillis();
 
-        System.out.println();
-        printPath(path);
+        //printPath(path);
+        //System.out.println("Path length = " + path.get(0).getPathSize());
         System.out.println("Time = " + (end - start));
     }
 
     private static ArrayList<Grid> solveBreadthFirst(Grid grid) {
         Comparator<Grid> comparator = new PathSizeComparator();
-        PriorityQueue<Grid> queue = new PriorityQueue<Grid>(10, comparator);
-        PriorityQueue<Grid> temporaryQueue = new PriorityQueue<Grid>(10, comparator);
-
+        PriorityQueue<Grid> queue = new PriorityQueue<>(10, comparator);
         HashSet<Grid> hash_set = new HashSet<>();
 
         // add first grid to queue and hashset
         queue.add(grid);
         hash_set.add(grid);
 
-        grid.printGrid();
-        //delay(2000);
-
-        //System.out.println(queue.peek().calculateMoveFreedom());
-        //delay(2000);
-
-        int counter = 1;
+        int amountOfGrids = 1;
         boolean goalReached = false;
         while(!goalReached) {
 
-
             // retrieve and remove first element and generate it's children
             Grid first_grid = queue.poll();
-            //first_grid.printGrid();
-            //delay(2000);
-            //for(int i = 0; i < 20; i++) {
-            //    System.out.println();
-            //}
-            //delay(100);
-            if(counter % 30000 == 0) {
-                System.out.println("Counter is: " + counter);
-                first_grid.printGrid();
-                System.out.println();
-            }
-            counter++;
-
-            int[][] grid1 = new int[6][6];
-            int[][] grid2 = new int[6][];
-            grid2[0] = grid1[0];
-            grid2[1] = new int[6];
-
-            grid2[2] = grid1[2];
-            grid2[3] = grid1[3];
-            grid2[4] = grid1[4];
-            grid2[5] = grid1[5];
 
             ArrayList<Grid> new_children = first_grid.generateAllChildren();
             for (Grid child : new_children) {
+                amountOfGrids++;
+
                 if (!hash_set.contains(child)) {
                     queue.add(child);
                     hash_set.add(child);
-                    continue;
                 }
 
                 if (child.goalReached()) {
+                    System.out.println("Amount of grids created = " + amountOfGrids);
                     return child.getPath();
                 }
             }

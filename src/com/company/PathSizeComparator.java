@@ -17,10 +17,9 @@ public class PathSizeComparator implements Comparator<Grid> {
         return 0;
         */
 
-
-        // compare function for a-star using a(n inadmissible) score function
-        int a_total = a.getScore();
-        int b_total = b.getScore();
+        // compare/score function for the inadmissible algorithm
+        int a_total = a.getPathSize()*25 + a.getScore();
+        int b_total = b.getPathSize()*25 + b.getScore();
 
         if (a_total < b_total) {
             return -1;

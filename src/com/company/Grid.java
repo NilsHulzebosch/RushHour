@@ -201,8 +201,8 @@ public class Grid {
 
     /* This heuristic calculates the amount of steps needed
      * to move the red car to it's goal position (blocking cars not taken into account). */
-    public void distanceToGoalPosition_heuristic(int x1) {
-        score += (size - x1) * 10;      // 20 for puzzle 6
+    public void distanceToGoalPosition_heuristic(int x1, int weight) {
+        score += (size - x1) * weight;
     }
 
     /* This heuristic calculates how many cars are blocking the red car,
@@ -211,12 +211,24 @@ public class Grid {
         for (int x = x1 + 2; x < size; x++) {
             if (grid[x][goal_y] != null) {
                 score += 20;    // 20 for puzzle 6
-                HashSet<Integer> carNumbers = new HashSet<>();
-                carNumbers.add(1);
-                score += blockingCarsCalculator(x, goal_y, 1, carNumbers)*20;
 
-                //System.out.println(blockingCarsCalculator(i, goal_y, 1, carNumbers));
-                //System.out.println(path_estimate-current_estimate);
+                /*
+                int number = grid[x][goal_y].getNumber();
+                int y1 = goal_y;
+                while (y1 > 0 && grid[x][y1] != null && grid[x][y1].getNumber() == number) {
+                    y1--;
+                }
+                if (grid[x][y1] != null) {
+                    int y2 = goal_y;
+                    while (y2 < size - 1 && grid[x][y2] != null && grid[x][y2].getNumber() == number) {
+                        y2++;
+                    }
+                    if (grid[x][y2] != null) {
+                        score += 20;
+                    }
+                }
+                */
+
             }
         }
     }
@@ -225,7 +237,7 @@ public class Grid {
      * i.e. there are no cars between the red car and the goal position. If this is true,
      * a big minimum score is given (so the path will be clear), and the distance from red car
      * to goal is given points, so it will move the red car towards the goal. */
-    public void clearPath_heuristic(int x1, int goal_y) {
+    public void clearPath_heuristic(int x1, int goal_y, int negativeWeight, int positiveWeight) {
         boolean pathIsClear = true;
         for(int x = x1+2; x < size; x++) {
             if(grid[x][goal_y] != null) {
@@ -233,14 +245,14 @@ public class Grid {
             }
         }
         if(pathIsClear) {
-            score -= 400;
-            score += (size - x1) * 40;
+            score -= negativeWeight;
+            score += (size - x1) * positiveWeight;
         }
     }
 
     /* This heuristic looks at the area around the red car and adds points for every field
      * that is non-empty (so the more crowded the surrounding area, the more points). */
-    public void surroundingCars_heuristic(int x1, int goal_y) {
+    public void surroundingCars_heuristic(int x1, int goal_y, int weight) {
         // calculate how far ahead (in the x direction) it must look for surrounding cars
         int maximumX;
         if (size - x1 > 5) {
@@ -257,7 +269,7 @@ public class Grid {
         for (int y = goal_y - 2; y < goal_y + 3; y++) {
             for (int x = x1; x <= maximumX; x++) {
                 if (grid[x][y] != null) {
-                    score += 6;             // (4 for puzzle 5)
+                    score += weight;
                 }
             }
         }
@@ -266,7 +278,7 @@ public class Grid {
     /* This heuristic calculates the total move freedom of all cars combined,
      * (i.e. the total possible moves from all cars added up). This will be substracted
      * from a constant, so the bigger the move freedom, the lower the points. */
-    public int moveFreedom_heuristic() {
+    public void moveFreedom_heuristic(int weight) {
         int moveFreedom = 0;
 
         for (int y = 0; y < size; y++) {
@@ -292,14 +304,13 @@ public class Grid {
                 }
             }
         }
-
-        return (30-moveFreedom)*7;     // for puzzle 5: 8 or 9
+        score += (30-moveFreedom)*weight;
     }
 
     /* This heuristic looks at how the cars are divided on the grid. It divides the grid into
      * four quadrants and looks at how each quadrant is filled with cars. If the cars are too
      * skewed, it gives points, so it will have the tendency to get a more equal distribution. */
-    public void quadrantDistribution_heuristic() {
+    public void quadrantDistribution_heuristic(int weight) {
         int coordinate = size/2;
         int endCoordinate = size-1;
 
@@ -308,30 +319,17 @@ public class Grid {
         int thirdQuadrant = calculateFreeSpace(0, coordinate, coordinate, endCoordinate);
         int fourthQuadrant = calculateFreeSpace(coordinate, coordinate, endCoordinate, endCoordinate);
 
-        /*
-        // for puzzle 5
-        if(firstQuadrant > secondQuadrant) {
-            mobility += 50;
+        if(secondQuadrant != 0 && firstQuadrant % secondQuadrant > 3) {
+            score += weight;
         }
-        if(thirdQuadrant > fourthQuadrant) {
-            mobility += 50;
+        if(thirdQuadrant != 0 && firstQuadrant % thirdQuadrant > 3) {
+            score += weight;
         }
-        if(firstQuadrant > thirdQuadrant) {
-            mobility += 20;
+        if(secondQuadrant != 0 && fourthQuadrant % secondQuadrant > 3) {
+            score += weight;
         }
-        */
-
-        if(secondQuadrant != 0 && firstQuadrant % secondQuadrant > 4) {
-            score += 20;
-        }
-        if(thirdQuadrant != 0 && firstQuadrant % thirdQuadrant > 4) {
-            score += 20;
-        }
-        if(secondQuadrant != 0 && fourthQuadrant % secondQuadrant > 4) {
-            score += 20;
-        }
-        if(thirdQuadrant != 0 && fourthQuadrant % thirdQuadrant > 4) {
-            score += 20;
+        if(thirdQuadrant != 0 && fourthQuadrant % thirdQuadrant > 3) {
+            score += weight;
         }
     }
 
@@ -349,23 +347,11 @@ public class Grid {
         return freeSpace;
     }
 
-    /* This heuristic gives points for every horizontal car on the last column. */
-    public void horizontalCars_heuristic() {
-        for(int y = 0; y < size; y++) {
-            if (grid[size - 1][y] != null && grid[size - 1][y].getDirection()) {
-                score += 20;
-            }
+    public void blockingCarBehind_heuristic(int x1, int goal_y, int weight) {
+        if(x1 > 0 && grid[x1 - 1][goal_y] != null) {
+            score += weight;
         }
     }
-
-    /* This heuristic detects whether the red car is caught in a cycle. This means that
-     * when it has to move forward (to the goal position), it is blocked by some sequence
-     * of cars, which is blocked again by the red car. So it has to move backwards.
-     * Whenever a cycle occurs, it gives points. */
-    public void detectCycles_heuristic(int x, int y) {
-        score += 200;
-    }
-
 
 
     // calculates an inadmissible score based on several (inadmissible) heuristics
@@ -391,32 +377,31 @@ public class Grid {
         }
 
         // distanceToGoalPosition heuristic
-        distanceToGoalPosition_heuristic(x1);
+        // takes the x position of the red car and the score weight
+        distanceToGoalPosition_heuristic(x1, 20);
 
         // blockingCars heuristic
+        // takes the x and y position of the red car and the score weight
         blockingCars_heuristic(x1, goal_y);
 
-        // clearPath heuristic
-        clearPath_heuristic(x1, goal_y);
+        // clearPath: takes the x and y position of the red car and the score weight
+        clearPath_heuristic(x1, goal_y, -400, 40);
 
-        // quadrantDistribution heuristic
-        quadrantDistribution_heuristic();
+        // quadrantDistribution: takes the score weight
+        quadrantDistribution_heuristic(30);
 
-        // surroundingCars heuristic
-        surroundingCars_heuristic(x1, goal_y);
+        // surroundingCars: takes the x and y position of the red car and the score weight
+        surroundingCars_heuristic(x1, goal_y, 16);
 
-        // horizontalCars heuristic
-        //horizontalCars_heuristic();
+        // moveFreedom: takes the score weight
+        moveFreedom_heuristic(8);
 
-        // moveFreedom heuristic
-        score += moveFreedom_heuristic();
+        // blockingCarBehind: takes the x and y position of the red car and the score weight
+        blockingCarBehind_heuristic(x1, goal_y, 200);
 
     }
 
     public void calculatePathEstimate() {
-        //System.out.println(calculateMoveFreedom());
-        path_estimate += moveFreedom_heuristic();
-
         // get row (y-pos) of red car based on board size
         int goal_y;
         if (size % 2 == 0) {
@@ -438,12 +423,21 @@ public class Grid {
         for (int i = x + 2; i < size; i++) {
             if (grid[i][goal_y] != null) {
                 path_estimate += 1;
-                int current_estimate = path_estimate;
-                HashSet<Integer> carNumbers = new HashSet<>();
-                carNumbers.add(1);
-                path_estimate += blockingCarsCalculator(i, goal_y, 1, carNumbers);
-                //System.out.println(blockingCarsCalculator(i, goal_y, 1, carNumbers));
-                //System.out.println(path_estimate-current_estimate);
+
+                int number = grid[i][goal_y].getNumber();
+                int y1 = goal_y;
+                while (y1 > 0 && grid[x][y1] != null && grid[x][y1].getNumber() == number) {
+                    y1--;
+                }
+                if (grid[x][y1] != null) {
+                    int y2 = goal_y;
+                    while (y2 < size - 1 && grid[x][y2] != null && grid[x][y2].getNumber() == number) {
+                        y2++;
+                    }
+                    if (grid[x][y2] != null) {
+                        path_estimate += 1;
+                    }
+                }
             }
         }
     }
