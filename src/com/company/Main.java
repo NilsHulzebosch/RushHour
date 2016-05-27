@@ -1,9 +1,21 @@
 package com.company;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.HashSet;
+import java.util.Comparator;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Type in the number of the puzzle you want to solve: ");
+        int puzzleNumber = in.nextInt();
+        if (puzzleNumber == 1) {
+            solveBreadthFirst(firstPuzzle());
+        }
+
         long start = System.currentTimeMillis();
         ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(secondPuzzle());
@@ -23,32 +35,33 @@ public class Main {
     private static ArrayList<Grid> solveBreadthFirst(Grid grid) {
         Comparator<Grid> comparator = new PathSizeComparator();
         PriorityQueue<Grid> queue = new PriorityQueue<>(10, comparator);
-
         HashSet<Grid> hash_set = new HashSet<>();
 
         // add first grid to queue and hashset
         queue.add(grid);
         hash_set.add(grid);
 
+        int amountOfGrids = 1;
         boolean goalReached = false;
         while(!goalReached) {
+
             // retrieve and remove first element and generate it's children
             Grid first_grid = queue.poll();
+
             ArrayList<Grid> new_children = first_grid.generateAllChildren();
-            for (int i = 0; i < new_children.size(); i++) {
-                Grid child = new_children.get(i);
+            for (Grid child : new_children) {
+                amountOfGrids++;
 
                 if (!hash_set.contains(child)) {
                     queue.add(child);
                     hash_set.add(child);
-                    continue;
                 }
 
-                if(child.goalReached()) {
+                if (child.goalReached()) {
+                    System.out.println("Amount of grids created = " + amountOfGrids);
                     return child.getPath();
                 }
             }
-
         }
         return null;
     }

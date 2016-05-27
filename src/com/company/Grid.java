@@ -11,6 +11,7 @@ public class Grid {
 
     private int path_size = 0;
     private int path_estimate = 0;
+    private int score = 0;
 
     // constructor
     public Grid(int size) {
@@ -108,7 +109,7 @@ public class Grid {
         return !direction && y > 0 && grid[x][y - 1] == null;
     }
 
-    // check whether the red car is in front of the exit
+    // check whether the red car is in front of the exit (goal position)
     public boolean goalReached() {
         if (size % 2 == 0) {
             return grid[size - 1][size / 2 - 1] != null && grid[size - 1][size / 2 - 1].getNumber() == 1;
@@ -122,6 +123,7 @@ public class Grid {
 
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
+
                 if (grid[x][y] != null) {
 
                     boolean direction = grid[x][y].getDirection();
@@ -188,29 +190,42 @@ public class Grid {
     }
 
     public void calculatePathEstimate() {
+        // get row (y-pos) of red car based on board size
         int goal_y;
         if (size % 2 == 0) {
-            goal_y = size/2 - 1;
+            goal_y = size / 2 - 1;
         } else {
-            goal_y = size/2;
+            goal_y = size / 2;
         }
 
+        // find the x-position of the red car
         int x = 0;
         while (grid[x][goal_y] == null || grid[x][goal_y].getNumber() != 1) {
             x++;
         }
 
+        // distance from red car to goal position
         path_estimate = size - x - 2;
 
-
+        // (minimum) amount of blocking cars
         for (int i = x + 2; i < size; i++) {
             if (grid[i][goal_y] != null) {
                 path_estimate += 1;
-                /*
-                if (grid[i][goal_y + 1] != null && grid[i][goal_y + 2] != null && grid[i][goal_y - 1] != null && grid[i][goal_y - 2] != null) {
-                    path_estimate += 1;
+
+                int number = grid[i][goal_y].getNumber();
+                int y1 = goal_y;
+                while (y1 > 0 && grid[x][y1] != null && grid[x][y1].getNumber() == number) {
+                    y1--;
                 }
-                */
+                if (grid[x][y1] != null) {
+                    int y2 = goal_y;
+                    while (y2 < size - 1 && grid[x][y2] != null && grid[x][y2].getNumber() == number) {
+                        y2++;
+                    }
+                    if (grid[x][y2] != null) {
+                        path_estimate += 1;
+                    }
+                }
             }
         }
     }
