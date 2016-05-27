@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+
         //Scanner in = new Scanner(System.in);
         //System.out.print("Type in the number of the puzzle you want to solve: ");
         //int puzzleNumber = in.nextInt();
@@ -17,10 +18,10 @@ public class Main {
         //}
 
         long start = System.currentTimeMillis();
-        //ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
+        ArrayList<Grid> path = solveBreadthFirst(firstPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(secondPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(thirdPuzzle());
-        ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
+        //ArrayList<Grid> path = solveBreadthFirst(fourthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(fifthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(sixthPuzzle());
         //ArrayList<Grid> path = solveBreadthFirst(seventhPuzzle());
@@ -76,27 +77,28 @@ public class Main {
         Grid grid = new Grid(6);
 
         grid.addVehicle(true, 2, 3, 2);     // red car (gets value 1)
-        grid.addVehicle(false, 2, 0, 4);
-        grid.addVehicle(true, 2, 1, 4);
-        grid.addVehicle(false, 3, 2, 0);
-        grid.addVehicle(true, 2, 3, 0);
-        grid.addVehicle(false, 3, 5, 0);
-        grid.addVehicle(true, 2, 4, 3);
-        grid.addVehicle(false, 3, 3, 3);
-        grid.addVehicle(true, 2, 4, 5);
+        grid.addVehicle(false, 3, 2, 0);    // purple ver. truck
+        grid.addVehicle(true, 2, 3, 0);     // cyan hor. car
+        grid.addVehicle(false, 3, 5, 0);    // purple ver. truck
+        grid.addVehicle(false, 3, 3, 3);    // orange ver. truck
+        grid.addVehicle(true, 2, 4, 3);     // orange hor. car
+        grid.addVehicle(false, 2, 0, 4);    // orange ver. car
+        grid.addVehicle(true, 2, 1, 4);     // cyan hor. car
+        grid.addVehicle(true, 2, 4, 5);     // turquoise hor. car
 
         return grid;
     }
 
+    // adds the second 6x6 board configuration from our assignment
     private static Grid secondPuzzle() {
         Grid grid = new Grid(6);
 
         grid.addVehicle(true, 2, 2, 2);     // red car (gets value 1)
-        grid.addVehicle(true, 2, 2, 0);
-        grid.addVehicle(true, 2, 4, 0);
-        grid.addVehicle(true, 2, 1, 1);
-        grid.addVehicle(true, 2, 3, 1);
-        grid.addVehicle(false, 3, 5, 1);
+        grid.addVehicle(true, 2, 2, 0);     // blue hor. car
+        grid.addVehicle(true, 2, 4, 0);     // orange hor. car
+        grid.addVehicle(true, 2, 1, 1);     // orange hor. car
+        grid.addVehicle(true, 2, 3, 1);     // turquoise hor. car
+        grid.addVehicle(false, 3, 5, 1);    // yellow
         grid.addVehicle(false, 2, 4, 2);
         grid.addVehicle(true, 2, 0, 3);
         grid.addVehicle(true, 2, 2, 3);
@@ -108,11 +110,11 @@ public class Main {
         return grid;
     }
 
+    // adds the third 6x6 board configuration from our assignment
     private static Grid thirdPuzzle() {
         Grid grid = new Grid(6);
 
         grid.addVehicle(true, 2, 0, 2);     // red car (gets value 1)
-
         grid.addVehicle(true, 2, 1, 0);     // blue hor. car
         grid.addVehicle(true, 3, 3, 0);     // light-yellow hor. truck
         grid.addVehicle(true, 2, 1, 1);     // orange hor. car
@@ -129,35 +131,37 @@ public class Main {
         return grid;
     }
 
+    // adds the first 9x9 board configuration from our assignment
     private static Grid fourthPuzzle() {
         Grid grid = new Grid(9);
 
-        grid.addVehicle(true, 2, 1, 4);
-        grid.addVehicle(false, 2, 0, 0);
-        grid.addVehicle(true, 3, 1, 0);
-        grid.addVehicle(false, 3, 5, 0);
-        grid.addVehicle(false, 3, 3, 1);
-        grid.addVehicle(true, 3, 6, 1);
-        grid.addVehicle(false, 3, 8, 2);
-        grid.addVehicle(true, 2, 0, 3);
-        grid.addVehicle(true, 3, 5, 3);
-        grid.addVehicle(false, 2, 0, 4);
-        grid.addVehicle(false, 2, 3, 4);
-        grid.addVehicle(false, 3, 2, 5);
-        grid.addVehicle(true, 3, 5, 5);
-        grid.addVehicle(false, 3, 8, 5);
-        grid.addVehicle(true, 2, 0, 6);
-        grid.addVehicle(false, 2, 3, 6);
-        grid.addVehicle(true, 2, 4, 6);
-        grid.addVehicle(false, 2, 0, 7);
-        grid.addVehicle(false, 2, 4, 7);
-        grid.addVehicle(true, 3, 1, 8);
-        grid.addVehicle(true, 2, 5, 8);
-        grid.addVehicle(true, 2, 7, 8);
+        grid.addVehicle(true, 2, 1, 4);     // red car (gets value 1)
+        grid.addVehicle(false, 2, 0, 0);    // turquoise ver. car
+        grid.addVehicle(true, 3, 1, 0);     // yellow hor. truck
+        grid.addVehicle(false, 3, 5, 0);    // gray ver. truck
+        grid.addVehicle(false, 3, 3, 1);    // purple ver. truck
+        grid.addVehicle(true, 3, 6, 1);     // purple hor. truck
+        grid.addVehicle(false, 3, 8, 2);    // yellow ver. truck
+        grid.addVehicle(true, 2, 0, 3);     // blue hor. car
+        grid.addVehicle(true, 3, 5, 3);     // yellow hor. truck
+        grid.addVehicle(false, 2, 0, 4);    // blue ver. car
+        grid.addVehicle(false, 2, 3, 4);    // turquoise ver. car
+        grid.addVehicle(false, 3, 2, 5);    // yellow ver. truck
+        grid.addVehicle(true, 3, 5, 5);     // purple hor. truck
+        grid.addVehicle(false, 3, 8, 5);    // yellow ver. truck
+        grid.addVehicle(true, 2, 0, 6);     // orange hor. car
+        grid.addVehicle(false, 2, 3, 6);    // blue ver. car
+        grid.addVehicle(true, 2, 4, 6);     // turquoise hor. car
+        grid.addVehicle(false, 2, 0, 7);    // blue ver. car
+        grid.addVehicle(false, 2, 4, 7);    // orange ver. car
+        grid.addVehicle(true, 3, 1, 8);     // gray hor. truck
+        grid.addVehicle(true, 2, 5, 8);     // cyan hor. car
+        grid.addVehicle(true, 2, 7, 8);     // turquoise hor. car
 
         return grid;
     }
 
+    // adds the second 9x9 board configuration from our assignment
     private static Grid fifthPuzzle() {
         Grid grid = new Grid(9);
 
@@ -189,6 +193,7 @@ public class Main {
         return grid;
     }
 
+    // adds the third 9x9 board configuration from our assignment
     private static Grid sixthPuzzle() {
         Grid grid = new Grid(9);
 
@@ -222,6 +227,7 @@ public class Main {
         return grid;
     }
 
+    // adds the 12x12 board configuration from our assignment
     private static Grid seventhPuzzle() {
         Grid grid = new Grid(12);
 

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 /* Table of Contents
  * 1. Private instance variables / constructors / get
- * 2. Methods for moving vehicles / adding grids
+ * 2.  Methods for adding/moving vehicles & making child grids
  * 3. Methods for the heuristics
  * 4. Methods for calculating score / path estimate
  * 5. Methods for the path / grid (visualisation)
@@ -69,9 +69,9 @@ public class Grid {
     }
 
 
-    /* ************************************************
-     * 2. Methods for moving vehicles / adding grids  *
-     ************************************************ */
+    /* ************************************************************
+     * 2. Methods for adding/moving vehicles & making child grids *
+     ************************************************************ */
 
     // adds vehicle to grid and array of all vehicles
     public void addVehicle(boolean direction, int length, int x, int y) {
@@ -405,16 +405,16 @@ public class Grid {
         score += clearPath_heuristic(red_x, red_y, -400, 40);
 
         // quadrantDistribution: takes the score weight and the boundary
-        score += quadrantDistribution_heuristic(30, 3);
+        //score += quadrantDistribution_heuristic(30, 3);
 
         // surroundingCars: takes the x and y position of the red car and the score weight
         score += surroundingCars_heuristic(red_x, red_y, 16);
 
         // moveFreedom: takes the score weight
-        score += moveFreedom_heuristic(8);
+        //score += moveFreedom_heuristic(8);
 
         // blockingCarBehind: takes the x and y position of the red car and the score weight
-        score += blockingCarBehind_heuristic(red_x, red_y, 200);
+        //score += blockingCarBehind_heuristic(red_x, red_y, 200);
 
     }
 
