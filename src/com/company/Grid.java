@@ -172,44 +172,50 @@ public class Grid {
                     if ((direction && (x == 0 || (x > 0 && grid[x][y] != grid[x - 1][y]))) ||
                             (!direction && (y == 0 || (y > 0 && grid[x][y] != grid[x][y - 1])))) {
 
-                        Grid new_grid = new Grid(this);
-                        Grid new_grid2 = new Grid(this);
                         if (moveRightIsPossible(x, y) && moveLeftIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
                             new_grid.moveRight(x, y);
                             new_grid.calculatePathEstimate();
                             //new_grid.calculateScore();
                             array_list.add(new_grid);
 
+                            Grid new_grid2 = new Grid(this);
                             new_grid2.moveLeft(x, y);
                             new_grid2.calculatePathEstimate();
                             //new_grid2.calculateScore();
                             array_list.add(new_grid2);
                         } else if (moveRightIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
                             new_grid.moveRight(x, y);
                             new_grid.calculatePathEstimate();
                             //new_grid.calculateScore();
                             array_list.add(new_grid);
                         } else if (moveLeftIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
                             new_grid.moveLeft(x, y);
                             new_grid.calculatePathEstimate();
                             //new_grid.calculateScore();
                             array_list.add(new_grid);
                         } else if (moveDownIsPossible(x, y) && moveUpIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
                             new_grid.moveDown(x, y);
                             new_grid.calculatePathEstimate();
                             //new_grid.calculateScore();
                             array_list.add(new_grid);
 
+                            Grid new_grid2 = new Grid(this);
                             new_grid2.moveUp(x, y);
                             new_grid2.calculatePathEstimate();
                             //new_grid2.calculateScore();
                             array_list.add(new_grid2);
                         } else if (moveDownIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
                             new_grid.moveDown(x, y);
                             new_grid.calculatePathEstimate();
                             //new_grid.calculateScore();
                             array_list.add(new_grid);
                         } else if (moveUpIsPossible(x, y)) {
+                            Grid new_grid = new Grid(this);
                             new_grid.moveUp(x, y);
                             new_grid.calculatePathEstimate();
                             //new_grid.calculateScore();
@@ -253,7 +259,6 @@ public class Grid {
 
         // blockingCarBehind: takes the x and y position of the red car and the score weight
         //score += blockingCarBehind_heuristic(red_x, red_y, 200);
-
     }
 
     public void calculatePathEstimate() {
@@ -293,7 +298,7 @@ public class Grid {
     }
 
     /* This heuristic calculates how many cars are blocking the red car,
-     * [if they are double blocked itself, an extra point is counted]. */
+     * [if they are double blocked themselves, an extra point is counted]. */
     public int blockingCars_heuristic(int x1, int goal_y, int weight, int indirectWeight) {
         int blockingCarsScore = 0;
         for (int x = x1 + 2; x < size; x++) {
