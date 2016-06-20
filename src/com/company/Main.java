@@ -29,7 +29,8 @@ public class Main {
         printPath(path);
         System.out.println("Time = " + (end - start) + "ms");
         System.out.println("Moves = " + path.get(0).getPathSize());
-        new Visualization(path);
+        System.out.println(path.get(8).getMove());
+        //new Visualization(path);
     }
 
     // solves puzzle

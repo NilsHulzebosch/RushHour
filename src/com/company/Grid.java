@@ -67,6 +67,35 @@ public class Grid {
         return score;
     }
 
+    public Move getMove() {
+        Vehicle[][] previous_grid = getParent().getGrid();
+
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                if (grid[x][y] == null && previous_grid[x][y] != null) {
+                    // if horizontal
+                    if (previous_grid[x][y].getDirection()) {
+                        return new Move(x, y, x + 1, y);
+
+                    // if vertical
+                    } else {
+                        return new Move(x, y, x, y + 1);
+                    }
+                } else if (grid[x][y] != null && previous_grid[x][y] == null) {
+                    // if horizontal
+                    if (grid[x][y].getDirection()) {
+                        return new Move(x + 1, y, x, y);
+
+                    // if vertical
+                    } else {
+                        return new Move(x, y + 1, x, y);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 
     /* ************************************************************
      * 2. Methods for adding/moving vehicles & making child grids *
