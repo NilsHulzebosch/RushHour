@@ -17,7 +17,7 @@ public class Visualization extends JFrame {
 
         for (int i = path.size() - 1; i >= 0; i--) {
             showBoard(path.get(i));
-            delay(500);
+            delay(1000);
         }
     }
 

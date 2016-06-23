@@ -75,20 +75,20 @@ public class Grid {
                 if (grid[x][y] == null && previous_grid[x][y] != null) {
                     // if horizontal
                     if (previous_grid[x][y].getDirection()) {
-                        return new Move(x, y, x + 1, y);
+                        return new Move(previous_grid[x][y], x, y, x + 1, y);
 
                     // if vertical
                     } else {
-                        return new Move(x, y, x, y + 1);
+                        return new Move(previous_grid[x][y], x, y, x, y + 1);
                     }
                 } else if (grid[x][y] != null && previous_grid[x][y] == null) {
                     // if horizontal
                     if (grid[x][y].getDirection()) {
-                        return new Move(x + 1, y, x, y);
+                        return new Move(grid[x][y], x + 1, y, x, y);
 
                     // if vertical
                     } else {
-                        return new Move(x, y + 1, x, y);
+                        return new Move(grid[x][y], x, y + 1, x, y);
                     }
                 }
             }

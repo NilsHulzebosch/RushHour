@@ -1,23 +1,102 @@
 package com.company;
 
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+
 public class Move {
 
-    private int previous_x;
-    private int previous_y;
-    private int new_x;
-    private int new_y;
+    private static double SQUARE_SIZE = 64;
+    private static double BOARD_SIZE = 384;
+    private static double BOARD_THICKNESS = 0;
+    private static double TOP_LEFT_X = 165 - BOARD_SIZE;
+    private static double TOP_LEFT_Y = 165;
+    private static double OPEN_GRIP = 30;
+    private static double CLOSED_GRIP = 0;
+    private static double GRAB_HEIGHT = 42;
+    private static double SAFE_HEIGHT = 80;
+    private static double ANGLE = 0;
 
-    public Move(int previous_x, int previous_y, int new_x, int new_y) {
-        this.previous_x = previous_x;
-        this.previous_y = previous_y;
-        this.new_x = new_x;
-        this.new_y = new_y;
+    private Vehicle vehicle;
+    public Point from = new Point();
+    public Point to = new Point();
+
+    public Move(Vehicle vehicle, int from_x, int from_y, int to_x, int to_y) {
+        this.vehicle = vehicle;
+        from.x = from_x;
+        from.y = from_y;
+        to.x = to_x;
+        to.y = to_y;
+    }
+
+    public void setToPoint(Point to) {
+        this.to = to;
     }
 
     public String toString() {
-        return previous_x + "," + previous_y + ":" + new_x + "," + new_y;
+        return from.x + "," + from.y + " to " + to.x + "," + to.y;
     }
 
+    private Point2D toCartesian(Point coords) {
+        double x = 0;
+        double y = 0;
+        if (vehicle.getLength() == 2) {
+            // if horizontal
+            if (vehicle.getDirection()) {
+                x = TOP_LEFT_X + (coords.x + 1) * SQUARE_SIZE;
+                y = TOP_LEFT_Y + (coords.y + 0.5) * SQUARE_SIZE;
 
+            // if vertical
+            } else {
+                x = TOP_LEFT_X + (coords.x + 0.5) * SQUARE_SIZE;
+                y = TOP_LEFT_Y + (coords.y + 1) * SQUARE_SIZE;
+            }
+        } else if (vehicle.getLength() == 3) {
+            // if horizontal
+            if (vehicle.getDirection()) {
+                x = TOP_LEFT_X + (coords.x + 1.5) * SQUARE_SIZE;
+                y = TOP_LEFT_Y + (coords.y + 0.5) * SQUARE_SIZE;
+
+                // if vertical
+            } else {
+                x = TOP_LEFT_X + (coords.x + 0.5) * SQUARE_SIZE;
+                y = TOP_LEFT_Y + (coords.y + 1.5) * SQUARE_SIZE;
+            }
+        }
+        return (new Point2D.Double(x, y));
+    }
+
+    public ArrayList<GripperPosition> getPath() {
+        ArrayList<GripperPosition> path = new ArrayList<>();
+        GripperPosition temp;
+
+        // from position, safe height, open grip
+        Point2D coords = toCartesian(from);
+        temp = new GripperPosition(coords.getX(), coords.getY(), BOARD_THICKNESS + SAFE_HEIGHT, ANGLE, OPEN_GRIP);
+        path.add(temp);
+
+        // from position, grab height, open grip
+        temp = new GripperPosition(coords.getX(), coords.getY(), BOARD_THICKNESS + GRAB_HEIGHT, ANGLE, OPEN_GRIP);
+        path.add(temp);
+
+        // from position, grab height, closed grip
+        temp = new GripperPosition(coords.getX(), coords.getY(), BOARD_THICKNESS + GRAB_HEIGHT, ANGLE, CLOSED_GRIP);
+        path.add(temp);
+
+        // to position, grab height, closed grip
+        coords = toCartesian(to);
+        temp = new GripperPosition(coords.getX(), coords.getY(), BOARD_THICKNESS + GRAB_HEIGHT, ANGLE, CLOSED_GRIP);
+        path.add(temp);
+
+        // to position, grab height, open grip
+        temp = new GripperPosition(coords.getX(), coords.getY(), BOARD_THICKNESS + GRAB_HEIGHT, ANGLE, OPEN_GRIP);
+        path.add(temp);
+
+        // to position, safe height, open grip
+        temp = new GripperPosition(coords.getX(), coords.getY(), BOARD_THICKNESS + SAFE_HEIGHT, ANGLE, OPEN_GRIP);
+        path.add(temp);
+
+        return path;
+    }
 
 }

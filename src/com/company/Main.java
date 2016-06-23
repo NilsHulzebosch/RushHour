@@ -1,5 +1,7 @@
 package com.company;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.HashSet;
@@ -29,7 +31,22 @@ public class Main {
         printPath(path);
         System.out.println("Time = " + (end - start) + "ms");
         System.out.println("Moves = " + path.get(0).getPathSize());
-        System.out.println(path.get(8).getMove());
+
+        ArrayList<Move> path_moves = gridsToMoves(path);
+
+        try {
+            PrintWriter writer = new PrintWriter("positions.txt", "UTF-8");
+            for (Move move : path_moves) {
+                for (GripperPosition gp : move.getPath()) {
+                    writer.println(gp);
+                }
+            }
+            writer.close();
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+
+        //System.out.println(path.get(8).getMove());
         //new Visualization(path);
     }
 
@@ -65,6 +82,23 @@ public class Main {
             }
         }
         return null;
+    }
+
+    private static ArrayList<Move> gridsToMoves(ArrayList<Grid> path) {
+        ArrayList<Move> path_moves = new ArrayList<>();
+        for (int i = path.size() - 2; i >= 0; i--) {
+            Move move = path.get(i).getMove();
+
+            while (i > 0 && path.get(i).getMove().to.x == path.get(i - 1).getMove().from.x &&
+                    path.get(i).getMove().to.y == path.get(i - 1).getMove().from.y) {
+                i--;
+            }
+
+            move.setToPoint(path.get(i).getMove().to);
+            path_moves.add(move);
+            System.out.println(move);
+        }
+        return path_moves;
     }
 
     // adds the first 6x6 board configuration from the assignment
