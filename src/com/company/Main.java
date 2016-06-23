@@ -36,7 +36,6 @@ public class Main {
         ArrayList<Joint> path_joints = positionsToJoints(path_positions);
         writeToFile(path_joints, "joints.txt");
 
-
         //new Visualization(path);
     }
 
