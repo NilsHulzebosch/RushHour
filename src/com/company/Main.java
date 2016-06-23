@@ -2,11 +2,7 @@ package com.company;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.PriorityQueue;
-import java.util.HashSet;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -34,19 +30,13 @@ public class Main {
 
         ArrayList<Move> path_moves = gridsToMoves(path);
 
-        try {
-            PrintWriter writer = new PrintWriter("positions.txt", "UTF-8");
-            for (Move move : path_moves) {
-                for (GripperPosition gp : move.getPath()) {
-                    writer.println(gp);
-                }
-            }
-            writer.close();
-        } catch (IOException ex) {
-            System.out.println(ex);
-        }
+        ArrayList<GripperPosition> path_positions = movesToPositions(path_moves);
+        writeToFile(path_positions, "positions.txt");
 
-        //System.out.println(path.get(8).getMove());
+        ArrayList<Joint> path_joints = positionsToJoints(path_positions);
+        writeToFile(path_joints, "joints.txt");
+
+
         //new Visualization(path);
     }
 
@@ -96,9 +86,41 @@ public class Main {
 
             move.setToPoint(path.get(i).getMove().to);
             path_moves.add(move);
-            System.out.println(move);
+            //System.out.println(move);
         }
         return path_moves;
+    }
+
+    private static ArrayList<GripperPosition> movesToPositions(ArrayList<Move> path_moves) {
+        ArrayList<GripperPosition> path_positions = new ArrayList<>();
+        for (Move move : path_moves) {
+            for (GripperPosition gp : move.getPath()) {
+                path_positions.add(gp);
+            }
+        }
+        return path_positions;
+    }
+
+    private static ArrayList<Joint> positionsToJoints(ArrayList<GripperPosition> path_positions) {
+        ArrayList<Joint> path_joints = new ArrayList<>();
+        Joint joint;
+        for (GripperPosition gp : path_positions) {
+            joint = new Joint(gp);
+            path_joints.add(joint);
+        }
+        return path_joints;
+    }
+
+    private static void writeToFile(ArrayList<?> array_list, String file_name) {
+        try {
+            PrintWriter writer = new PrintWriter(file_name, "UTF-8");
+            for (Object object : array_list) {
+                writer.println(object);
+            }
+            writer.close();
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
     }
 
     // adds the first 6x6 board configuration from the assignment
