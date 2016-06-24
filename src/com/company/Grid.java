@@ -67,6 +67,7 @@ public class Grid {
         return score;
     }
 
+    // compares previous Grid and this Grid to find Move
     public Move getMove() {
         Vehicle[][] previous_grid = getParent().getGrid();
 

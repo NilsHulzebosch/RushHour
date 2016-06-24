@@ -2,9 +2,6 @@ package com.company;
 
 import javafx.geometry.Point3D;
 
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
-
 public class Joint {
 
     private RobotJoints robotJoints = new RobotJoints();
@@ -19,6 +16,7 @@ public class Joint {
     private double grip;
 
     // constructor
+    // inverse kinematics used to calculate joint angles
     public Joint(GripperPosition gp) {
         /* correct for errors in the arm*/
         // if left on the board then assume left-hand configuration
@@ -65,6 +63,7 @@ public class Joint {
         elbow = theta2;
     }
 
+    @Override
     public String toString() {
         return String.valueOf(zed) + " " + String.valueOf(shoulder) + " " +
                 String.valueOf(elbow) + " " + String.valueOf(yaw) + " " +

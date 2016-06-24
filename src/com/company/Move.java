@@ -8,19 +8,21 @@ public class Move {
 
     private static double SQUARE_SIZE = 64;
     private static double BOARD_SIZE = 384;
-    private static double BOARD_THICKNESS = 0;
-    private static double TOP_LEFT_X = 165 - BOARD_SIZE;
-    private static double TOP_LEFT_Y = 165;
+    private static double BOARD_THICKNESS = 8;
+    private static double TOP_LEFT_X = 210 - BOARD_SIZE;
+    private static double TOP_LEFT_Y = 120;
     private static double OPEN_GRIP = 30;
     private static double CLOSED_GRIP = 0;
-    private static double GRAB_HEIGHT = 42;
-    private static double SAFE_HEIGHT = 80;
+    private static double GRAB_HEIGHT = 55;
+    private static double SAFE_HEIGHT = 90;
     private static double ANGLE = 0;
 
+    // vehicle that is being moved
     private Vehicle vehicle;
     public Point from = new Point();
     public Point to = new Point();
 
+    // constructor
     public Move(Vehicle vehicle, int from_x, int from_y, int to_x, int to_y) {
         this.vehicle = vehicle;
         from.x = from_x;
@@ -29,14 +31,17 @@ public class Move {
         to.y = to_y;
     }
 
+    // sets to Point
     public void setToPoint(Point to) {
         this.to = to;
     }
 
+    @Override
     public String toString() {
         return from.x + "," + from.y + " to " + to.x + "," + to.y;
     }
 
+    // translates column and row coordinates to cartesian coordinates
     private Point2D toCartesian(Point coords) {
         double x = 0;
         double y = 0;
@@ -66,6 +71,7 @@ public class Move {
         return (new Point2D.Double(x, y));
     }
 
+    // returns this Move's GripperPosition path
     public ArrayList<GripperPosition> getPath() {
         ArrayList<GripperPosition> path = new ArrayList<>();
         GripperPosition temp;

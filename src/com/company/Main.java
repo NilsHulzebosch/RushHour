@@ -36,7 +36,7 @@ public class Main {
         ArrayList<Joint> path_joints = positionsToJoints(path_positions);
         writeToFile(path_joints, "joints.txt");
 
-        //new Visualization(path);
+        new Visualization(path);
     }
 
     // solves puzzle
@@ -73,6 +73,7 @@ public class Main {
         return null;
     }
 
+    // translates Grid ArrayList to Move ArrayList
     private static ArrayList<Move> gridsToMoves(ArrayList<Grid> path) {
         ArrayList<Move> path_moves = new ArrayList<>();
         for (int i = path.size() - 2; i >= 0; i--) {
@@ -90,6 +91,7 @@ public class Main {
         return path_moves;
     }
 
+    // translates Move ArrayList to GripperPosition ArrayList
     private static ArrayList<GripperPosition> movesToPositions(ArrayList<Move> path_moves) {
         ArrayList<GripperPosition> path_positions = new ArrayList<>();
         for (Move move : path_moves) {
@@ -100,6 +102,7 @@ public class Main {
         return path_positions;
     }
 
+    // translates GripperPosition ArrayList to Joint ArrayList
     private static ArrayList<Joint> positionsToJoints(ArrayList<GripperPosition> path_positions) {
         ArrayList<Joint> path_joints = new ArrayList<>();
         Joint joint;
@@ -110,6 +113,7 @@ public class Main {
         return path_joints;
     }
 
+    // writes out every object in ArrayList in .txt file
     private static void writeToFile(ArrayList<?> array_list, String file_name) {
         try {
             PrintWriter writer = new PrintWriter(file_name, "UTF-8");

@@ -1,3 +1,6 @@
+/* This file was copied from the software4students directory
+ * from the Zoeken, Sturen & Bewegen course */
+
 package com.company;
 
 import java.util.Hashtable;
